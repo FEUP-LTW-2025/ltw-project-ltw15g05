@@ -3,9 +3,22 @@ declare(strict_types=1);
 
 // Check if the request is directly for index.php
 $request_uri = $_SERVER['REQUEST_URI'];
-if ($request_uri == '/' || $request_uri == '/index.php') {
-    // Only redirect when directly accessing index.php or root
-    header('Location: pages/form_register.php');
+    if ($request_uri == '/' || $request_uri == '/index.php') {
+        require_once(__DIR__ . '/includes/session.php');
+
+    $session = Session::getInstance();
+    $userData = $session->getUser();
+
+    if ($userData) {
+        header('Location: pages/main.php');
+        exit();
+    }
+
+    require_once(__DIR__ . '/templates/common.tpl.php');
+    require_once(__DIR__ . '/templates/index.tpl.php');
+
+    drawFrontPage();
+    drawFooter();
     exit;
 }
 
