@@ -1,10 +1,13 @@
 <?php
 declare(strict_types=1);
 
-// Check if the request is directly for index.php
+// Built-in PHP server routing script
 $request_uri = $_SERVER['REQUEST_URI'];
-    if ($request_uri == '/' || $request_uri == '/index.php') {
-        require_once(__DIR__ . '/includes/session.php');
+$uri_path = parse_url($request_uri, PHP_URL_PATH);
+
+// Handle root or index.php requests
+if ($uri_path == '/' || $uri_path == '/index.php') {
+    require_once(__DIR__ . '/includes/session.php');
 
     $session = Session::getInstance();
     $userData = $session->getUser();
@@ -23,15 +26,14 @@ $request_uri = $_SERVER['REQUEST_URI'];
 }
 
 // For other requests
-$file_path = __DIR__ . parse_url($request_uri, PHP_URL_PATH);
+$file_path = __DIR__ . $uri_path;
 if (file_exists($file_path)) {
     // Check if this is a PHP file
     $extension = pathinfo($file_path, PATHINFO_EXTENSION);
     
     if (strtolower($extension) === 'php') {
-        // For PHP files, include them to execute the code
-        // This is important: return false to indicate the router handled this request
-        return false;
+        // For PHP files, we need to tell the built-in server to process them normally
+        return false; // This special return value tells PHP's built-in server to process the request normally
     } 
     elseif (!is_dir($file_path)) {
         // For non-PHP files, serve the content

@@ -11,11 +11,11 @@ $password = $_POST['password'];
 $user = User::get_user_by_username_password($username, $password);
 
 if ($user) {
-    Session::getInstance()->login($user['id']);
-    header('Location: ../pages/profile.php');
+    Session::getInstance()->login((int)$user['id']);
+    header('Location: ../pages/main.php');
     exit();
 } else {
     header('Location: ../pages/form_login.php?error=1');
     exit();
 }
-?>4
+?>
