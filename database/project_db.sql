@@ -124,6 +124,26 @@ INSERT INTO users (username, password, name, created_at) VALUES
 ('admin_user', 'adminpass123', 'Admin User', '2023-01-01 00:00:00'),
 ('alex_green', 'greenalex', 'Alex Green', '2023-09-15 12:35:00');
 
+INSERT INTO categories (name) VALUES
+('Photography'),
+('Videography'),
+('Editing'),
+('Graphic Design'),
+('Event Coverage'),
+('Drone Services');
+
+INSERT INTO services (
+    freelancer_id, title, description, category_id, price,
+    delivery_time, photo_style, equipment_provided, location
+) VALUES
+(1, 'Wedding Photography Package', 'Full-day wedding coverage including edited photos and online gallery.', 1, 1500.00, 7, 'Portrait', 1, 'Los Angeles, CA'),
+(2, 'Event Videography', 'Professional videography for corporate or private events. Includes 4K video.', 2, 1200.00, 10, 'Landscape', 1, 'New York, NY'),
+(3, 'Portrait Editing Services', 'High-end retouching for professional headshots and portraits.', 3, 250.00, 3, 'Portrait', 0, NULL),
+(4, 'Logo & Brand Kit Design', 'Custom logo design with brand color palette and typography.', 4, 500.00, 5, 'Landscape', 0, NULL),
+(5, 'Birthday Party Photography', '3-hour event shoot with 50+ edited images delivered digitally.', 1, 400.00, 4, 'Portrait', 1, 'Austin, TX'),
+(6, 'Drone Aerial Shots', 'High-quality drone footage for real estate or commercial use.', 6, 600.00, 2, 'Landscape', 1, 'San Diego, CA'),
+(7, 'Engagement Photoshoot', '1-hour outdoor shoot with 20 edited photos.', 1, 300.00, 3, 'Portrait', 1, 'Seattle, WA');
+
 -- Assign roles to users (assuming role IDs: 1=freelancer, 2=client, 3=admin)
 INSERT INTO user_roles (user_id, role_id) VALUES
 (1, 1), -- John Doe is a freelancer

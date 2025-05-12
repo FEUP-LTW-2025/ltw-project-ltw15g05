@@ -2,25 +2,27 @@
 declare(strict_types=1);
 ?>
 
-<?php function drawMainPage(array $userData) { ?>
-    <section class="dashboard">
-        <div class="container">
-            <div class="welcome-card">
-                <h1 class="welcome-title">Welcome back, <?= htmlspecialchars($userData['name']) ?>!</h1>
-                <p>You're now logged in to your FlashMe dashboard.</p>
-            </div>
-            
-            <div class="dashboard-content">
-                <!-- Dashboard content can be added here -->
-                <div class="card mt-3">
-                    <h2>Your Flashcards</h2>
-                    <p>Start creating and reviewing your flashcards to improve your learning experience.</p>
-                    <div class="btn-group mt-2">
-                        <a href="#" class="btn btn-primary">Create New Deck</a>
-                        <a href="#" class="btn btn-outline">View All Decks</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+<?php function drawServiceList(array $services) { ?>
+    <section id="services">
+        <ul class="flex square">
+            <?php foreach ($services as $service) { ?>
+                <li>
+                    <article>
+                        <a href="service.php?id=<?=$service->id?>">
+                            <img src="https://picsum.photos/200?service=<?=$service->id?>" width="200" height="200" alt="Service image">
+                            <h3><?=htmlspecialchars($service->title)?></h3>
+                        </a>
+                        <p><?=htmlspecialchars($service->description)?></p>
+                        <ul>
+                            <li><strong>Price:</strong> $<?=number_format($service->price, 2)?></li>
+                            <li><strong>Delivery Time:</strong> <?=intval($service->delivery_time)?> days</li>
+                            <li><strong>Photo Style:</strong> <?=htmlspecialchars($service->photo_style)?></li>
+                            <li><strong>Equipment Provided:</strong> <?=($service->equipment_provided ? 'Yes' : 'No')?></li>
+                            <li><strong>Location:</strong> <?=htmlspecialchars($service->location ?? 'Remote')?></li>
+                        </ul>
+                    </article>
+                </li>
+            <?php } ?>
+        </ul>
     </section>
-<?php } ?>
+<?php } 
