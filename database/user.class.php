@@ -6,10 +6,10 @@ class User {
     public int $id;
     public string $name;
     public string $username;
-    public string $email;
+    public ?string $email;
     public array $roles;
 
-    public function __construct(int $id, string $name, string $username, string $email = '', array $roles = []) {
+    public function __construct(int $id, string $name, string $username, ?string $email = null, array $roles = []) {
         $this->id = $id;
         $this->name = $name;
         $this->username = $username;
@@ -27,21 +27,12 @@ class User {
             throw new Exception('Username already exists');
         }
         
-        // Check if email already exists (if provided)
-        if (!empty($email)) {
-            $stmt = $db->prepare('SELECT id FROM users WHERE email = ?');
-            $stmt->execute([$email]);
-            if ($stmt->fetch()) {
-                throw new Exception('Email already exists');
-            }
-        }
-        
-        // Create the user with email field
-        $stmt = $db->prepare('INSERT INTO users (name, username, password, email) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$name, $username, password_hash($password, PASSWORD_DEFAULT), $email]);
+        // Create the user without email field
+        $stmt = $db->prepare('INSERT INTO users (name, username, password) VALUES (?, ?, ?)');
+        $stmt->execute([$name, $username, password_hash($password, PASSWORD_DEFAULT)]);
         
         // Set default role as client
-        $userId = $db->lastInsertId();
+        $userId = (int)$db->lastInsertId();
         self::addRole($userId, 'client');
         
         return $userId;
@@ -115,14 +106,8 @@ class User {
     public static function addRole(int $userId, string $roleName) {
         $db = Database::getInstance();
         
-        // Get role ID
-        $stmt = $db->prepare('SELECT id FROM roles WHERE name = ?');
-        $stmt->execute([$roleName]);
-        $roleId = $stmt->fetchColumn();
-        
-        if (!$roleId) {
-            throw new Exception('Role does not exist');
-        }
+        // First ensure the role exists in the roles table
+        $roleId = self::ensureRoleExists($roleName);
         
         // Check if user already has this role
         $stmt = $db->prepare('SELECT COUNT(*) FROM user_roles WHERE user_id = ? AND role_id = ?');
@@ -136,7 +121,30 @@ class User {
         $stmt->execute([$userId, $roleId]);
     }
     
-    public static function updateProfile($id, $name, $username, $email = '', $currentPassword = '', $newPassword = '') {
+    private static function ensureRoleExists(string $roleName) {
+        $db = Database::getInstance();
+        
+        // Get role ID
+        $stmt = $db->prepare('SELECT id FROM roles WHERE name = ?');
+        $stmt->execute([$roleName]);
+        $roleId = $stmt->fetchColumn();
+        
+        // If role doesn't exist, create it
+        if (!$roleId) {
+            // Check if the role name is valid (based on CHECK constraint in schema)
+            if (!in_array($roleName, ['freelancer', 'client', 'admin'])) {
+                throw new Exception('Invalid role name');
+            }
+            
+            $stmt = $db->prepare('INSERT INTO roles (name) VALUES (?)');
+            $stmt->execute([$roleName]);
+            $roleId = (int)$db->lastInsertId();
+        }
+        
+        return $roleId;
+    }
+    
+    public static function updateProfile($id, $name, $username, $currentPassword = '', $newPassword = '') {
         $db = Database::getInstance();
         
         // First get the current user data
@@ -154,15 +162,6 @@ class User {
             $stmt->execute([$username, $id]);
             if ($stmt->fetch()) {
                 throw new Exception('Username already exists');
-            }
-        }
-        
-        // If email provided, check if it's available
-        if (!empty($email) && $email !== $user['email']) {
-            $stmt = $db->prepare('SELECT id FROM users WHERE email = ? AND id != ?');
-            $stmt->execute([$email, $id]);
-            if ($stmt->fetch()) {
-                throw new Exception('Email already exists');
             }
         }
         
@@ -187,12 +186,12 @@ class User {
             }
             
             // Update user with new password
-            $stmt = $db->prepare('UPDATE users SET name = ?, username = ?, email = ?, password = ? WHERE id = ?');
-            $stmt->execute([$name, $username, $email, password_hash($newPassword, PASSWORD_DEFAULT), $id]);
+            $stmt = $db->prepare('UPDATE users SET name = ?, username = ?, password = ? WHERE id = ?');
+            $stmt->execute([$name, $username, password_hash($newPassword, PASSWORD_DEFAULT), $id]);
         } else {
             // Update user without changing password
-            $stmt = $db->prepare('UPDATE users SET name = ?, username = ?, email = ? WHERE id = ?');
-            $stmt->execute([$name, $username, $email, $id]);
+            $stmt = $db->prepare('UPDATE users SET name = ?, username = ? WHERE id = ?');
+            $stmt->execute([$name, $username, $id]);
         }
         
         return self::get_user_by_id($id);

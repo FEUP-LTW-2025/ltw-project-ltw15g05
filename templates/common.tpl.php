@@ -2,7 +2,7 @@
 declare(strict_types=1);
 ?>
 
-<?php function drawHeader(bool $isLoggedIn = false) { ?>
+<?php function drawHeader(bool $isLoggedIn = false, ?array $userData = null) { ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,8 +11,10 @@ declare(strict_types=1);
     <title>FlashMe - Flashcard Learning</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/header-footer.css">
+    <link rel="stylesheet" href="../css/profile.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="../favicon.ico">
+    <script src="../js/profile.js" defer></script>
 </head>
 <body>
     <header class="site-header">

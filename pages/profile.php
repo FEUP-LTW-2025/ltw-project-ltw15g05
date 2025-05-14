@@ -22,6 +22,12 @@ $completedOrders = 0;
 $pendingOrders = 0;
 $conversations = [];
 
+// Check for missing service_images table and add a message
+$serviceImagesTableExists = Service::serviceImagesTableExists();
+if (!$serviceImagesTableExists) {
+    $session->addMessage('warning', 'The service_images table is missing. Some image features may not work properly. Please run the database/migrate_service_images.php script to fix this.');
+}
+
 if (in_array('freelancer', $userData['roles'])) {
     $services = Service::getByFreelancerId((int)$userData['id']);
     $freelancerTransactions = Transaction::getByFreelancerId((int)$userData['id']);
@@ -47,6 +53,6 @@ $clientTransactions = Transaction::getByClientId((int)$userData['id']);
 require_once(__DIR__ . '/../templates/common.tpl.php');
 require_once(__DIR__ . '/../templates/profile.tpl.php');
 
-drawHeader();
+drawHeader(true, $userData);
 drawProfile($userData);
 drawFooter();

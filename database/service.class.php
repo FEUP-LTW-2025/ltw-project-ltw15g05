@@ -48,7 +48,8 @@ class Service {
         int $category_id, 
         float $price, 
         int $delivery_time,
-        array $images = []
+        array $images = [],
+        bool $featured = false
     ): int {
         $db = Database::getInstance();
         
@@ -57,25 +58,30 @@ class Service {
                 freelancer_id, title, description, category_id, 
                 price, delivery_time, featured, created_at, updated_at
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ');
         
         $stmt->execute([
             $freelancer_id, $title, $description, $category_id, 
-            $price, $delivery_time
+            $price, $delivery_time, $featured ? 1 : 0
         ]);
         
         $serviceId = $db->lastInsertId();
         
         // Process images if any
         if (!empty($images)) {
-            foreach ($images as $index => $image) {
-                $isPrimary = ($index === 0) ? 1 : 0; // First image is primary
-                $stmt = $db->prepare('
-                    INSERT INTO service_images (service_id, image_path, is_primary)
-                    VALUES (?, ?, ?)
-                ');
-                $stmt->execute([$serviceId, $image, $isPrimary]);
+            try {
+                foreach ($images as $index => $image) {
+                    $isPrimary = ($index === 0) ? 1 : 0; // First image is primary
+                    $stmt = $db->prepare('
+                        INSERT INTO service_images (service_id, image_path, is_primary)
+                        VALUES (?, ?, ?)
+                    ');
+                    $stmt->execute([$serviceId, $image, $isPrimary]);
+                }
+            } catch (PDOException $e) {
+                // If service_images table doesn't exist, just skip adding images
+                // Will need to create the table in the future
             }
         }
         
@@ -99,14 +105,19 @@ class Service {
     public static function getServiceImages(int $serviceId): array {
         $db = Database::getInstance();
         
-        $stmt = $db->prepare('
-            SELECT * FROM service_images 
-            WHERE service_id = ? 
-            ORDER BY is_primary DESC, id ASC
-        ');
-        $stmt->execute([$serviceId]);
-        
-        return $stmt->fetchAll();
+        try {
+            $stmt = $db->prepare('
+                SELECT * FROM service_images 
+                WHERE service_id = ? 
+                ORDER BY is_primary DESC, id ASC
+            ');
+            $stmt->execute([$serviceId]);
+            
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            // If service_images table doesn't exist
+            return [];
+        }
     }
     
     public static function getAll(
@@ -154,7 +165,8 @@ class Service {
             $orderBy = "featured DESC, created_at DESC";
         }
         
-        $query = "
+        // Try first with service_images
+        $queryWithImages = "
             SELECT s.*, 
                    u.name as freelancer_name, 
                    c.name as category_name,
@@ -167,30 +179,64 @@ class Service {
             LIMIT ? OFFSET ?
         ";
         
+        $queryWithoutImages = "
+            SELECT s.*, 
+                   u.name as freelancer_name, 
+                   c.name as category_name,
+                   NULL as primary_image
+            FROM services s
+            JOIN users u ON s.freelancer_id = u.id
+            JOIN categories c ON s.category_id = c.id
+            $whereClause
+            ORDER BY s.featured DESC, $orderBy
+            LIMIT ? OFFSET ?
+        ";
+        
         $params[] = $limit;
         $params[] = $offset;
         
-        $stmt = $db->prepare($query);
-        $stmt->execute($params);
-        
-        return $stmt->fetchAll();
+        try {
+            $stmt = $db->prepare($queryWithImages);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            // If service_images table doesn't exist, use alternative query
+            $stmt = $db->prepare($queryWithoutImages);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        }
     }
     
     public static function getByFreelancerId(int $freelancerId): array {
         $db = Database::getInstance();
         
-        $stmt = $db->prepare('
-            SELECT s.*, 
-                   c.name as category_name,
-                   (SELECT image_path FROM service_images WHERE service_id = s.id AND is_primary = 1 LIMIT 1) as primary_image
-            FROM services s
-            JOIN categories c ON s.category_id = c.id
-            WHERE s.freelancer_id = ?
-            ORDER BY s.created_at DESC
-        ');
-        $stmt->execute([$freelancerId]);
-        
-        return $stmt->fetchAll();
+        try {
+            // First try to query with service_images table
+            $stmt = $db->prepare('
+                SELECT s.*, 
+                       c.name as category_name,
+                       (SELECT image_path FROM service_images WHERE service_id = s.id AND is_primary = 1 LIMIT 1) as primary_image
+                FROM services s
+                JOIN categories c ON s.category_id = c.id
+                WHERE s.freelancer_id = ?
+                ORDER BY s.created_at DESC
+            ');
+            $stmt->execute([$freelancerId]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            // If service_images table doesn't exist, use this simpler query
+            $stmt = $db->prepare('
+                SELECT s.*, 
+                       c.name as category_name,
+                       NULL as primary_image
+                FROM services s
+                JOIN categories c ON s.category_id = c.id
+                WHERE s.freelancer_id = ?
+                ORDER BY s.created_at DESC
+            ');
+            $stmt->execute([$freelancerId]);
+            return $stmt->fetchAll();
+        }
     }
     
     public static function update(
@@ -250,6 +296,22 @@ class Service {
         $stmt->execute([$id]);
         
         return $stmt->fetch() ?: null;
+    }
+    
+    public static function serviceImagesTableExists(): bool {
+        $db = Database::getInstance();
+        
+        try {
+            $stmt = $db->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='service_images'");
+            $stmt->execute();
+            return $stmt->fetchColumn() !== false;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public static function getAllCategories(): array {
+        return self::getCategories();
     }
 }
 ?>

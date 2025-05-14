@@ -41,5 +41,18 @@ class Session {
     public function logout() {
         session_destroy();
     }
+    
+    public function addMessage(string $type, string $content): void {
+        if (!isset($_SESSION['messages'])) {
+            $_SESSION['messages'] = [];
+        }
+        $_SESSION['messages'][] = ['type' => $type, 'content' => $content];
+    }
+    
+    public function getMessages(): array {
+        $messages = $_SESSION['messages'] ?? [];
+        $_SESSION['messages'] = []; // Clear messages after retrieving
+        return $messages;
+    }
 }
 ?>

@@ -83,39 +83,59 @@ class Transaction {
     public static function getByClientId(int $clientId): array {
         $db = Database::getInstance();
         
-        $stmt = $db->prepare('
-            SELECT t.*, 
-                   s.title as service_title, 
-                   f.name as freelancer_name,
-                   (SELECT image_path FROM service_images WHERE service_id = t.service_id AND is_primary = 1 LIMIT 1) as service_image
-            FROM transactions t
-            JOIN services s ON t.service_id = s.id
-            JOIN users f ON t.freelancer_id = f.id
-            WHERE t.client_id = ?
-            ORDER BY t.created_at DESC
-        ');
-        $stmt->execute([$clientId]);
-        
-        return $stmt->fetchAll();
+        try {
+            $stmt = $db->prepare('
+                SELECT t.*, 
+                       s.title as service_title, 
+                       f.name as freelancer_name
+                FROM transactions t
+                JOIN services s ON t.service_id = s.id
+                JOIN users f ON t.freelancer_id = f.id
+                WHERE t.client_id = ?
+                ORDER BY t.created_at DESC
+            ');
+            $stmt->execute([$clientId]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            // Return empty array if there's any error
+            return [];
+        }
     }
     
     public static function getByFreelancerId(int $freelancerId): array {
         $db = Database::getInstance();
         
-        $stmt = $db->prepare('
-            SELECT t.*, 
-                   s.title as service_title, 
-                   c.name as client_name,
-                   (SELECT image_path FROM service_images WHERE service_id = t.service_id AND is_primary = 1 LIMIT 1) as service_image
-            FROM transactions t
-            JOIN services s ON t.service_id = s.id
-            JOIN users c ON t.client_id = c.id
-            WHERE t.freelancer_id = ?
-            ORDER BY t.created_at DESC
-        ');
-        $stmt->execute([$freelancerId]);
-        
-        return $stmt->fetchAll();
+        try {
+            // First try to query with service_images table
+            $stmt = $db->prepare('
+                SELECT t.*, 
+                       s.title as service_title, 
+                       c.name as client_name,
+                       (SELECT image_path FROM service_images WHERE service_id = t.service_id AND is_primary = 1 LIMIT 1) as service_image
+                FROM transactions t
+                JOIN services s ON t.service_id = s.id
+                JOIN users c ON t.client_id = c.id
+                WHERE t.freelancer_id = ?
+                ORDER BY t.created_at DESC
+            ');
+            $stmt->execute([$freelancerId]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            // If service_images table doesn't exist, use this simpler query
+            $stmt = $db->prepare('
+                SELECT t.*, 
+                       s.title as service_title, 
+                       c.name as client_name,
+                       NULL as service_image
+                FROM transactions t
+                JOIN services s ON t.service_id = s.id
+                JOIN users c ON t.client_id = c.id
+                WHERE t.freelancer_id = ?
+                ORDER BY t.created_at DESC
+            ');
+            $stmt->execute([$freelancerId]);
+            return $stmt->fetchAll();
+        }
     }
     
     public static function updateStatus(int $id, string $status): bool {

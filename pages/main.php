@@ -14,7 +14,7 @@ if (!$userData) {
 require_once(__DIR__ . '/../templates/common.tpl.php');
 require_once(__DIR__ . '/../templates/main.tpl.php');
 
-drawHeader(true); // Pass true to indicate user is logged in
+drawHeader(true, $userData); // Pass true to indicate user is logged in and pass user data
 drawMainPage($userData);
 drawFooter();
 ?>

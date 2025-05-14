@@ -32,13 +32,22 @@ declare(strict_types=1);
     </div>
 <?php } ?>
 
-<?php function drawRegisterForm() { ?>
+<?php function drawRegisterForm(array $messages = []) { ?>
     <div class="auth-wrapper">
         <div class="auth-card">
             <div class="auth-header">
                 <h1 class="auth-title">Create Account</h1>
                 <p class="auth-subtitle">Get started with your free account</p>
             </div>
+            
+            <?php if (!empty($messages)): ?>
+                <?php foreach ($messages as $message): ?>
+                    <div class="alert alert-<?= $message['type'] === 'error' ? 'danger' : $message['type'] ?>">
+                        <?= $message['content'] ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            
             <form action="../actions/action_register.php" method="POST">
                 <div class="form-group">
                     <label for="name" class="form-label">Full Name</label>
