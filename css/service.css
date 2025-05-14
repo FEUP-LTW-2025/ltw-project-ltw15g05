@@ -1,0 +1,165 @@
+/* ====== Service Page ====== */
+
+/* ====== Service Page ====== */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f3f4f6;
+  color: #222;
+}
+
+.service-page {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 5%;
+  max-width: 1525px;
+  margin: 1.5rem auto;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+
+.service-page:hover {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.service-page h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #1f2937;
+  margin-bottom: 2.5rem;
+  border-bottom: 1.4px solid #e5e7eb;
+  padding-bottom: 1rem;
+}
+
+.service-details {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.service-image {
+  flex: 1 1 40%;
+  max-width: 500px;
+  max-height: 500px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.service-meta {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.service-meta p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1rem;
+  color: #374151;
+  margin: 0;
+}
+
+.service-meta p strong {
+  color: #111827;
+  font-weight: 600;
+  margin-right: 1rem;
+  min-width: 160px;
+}
+
+
+.freelancer-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.freelancer-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.freelancer-name {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #1f2937;
+}
+
+.freelancer-rating {
+  font-size: 0.95rem;
+  color: #fbbf24; /* cor amarela */
+  margin-top: 0.25rem;
+}
+
+
+.user-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #cbd5e1;
+}
+
+.buy-buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.buy-now,
+.save-later {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buy-now {
+  background-color: #10b981; /* verde */
+  color: #ffffff;
+}
+
+.buy-now:hover {
+  background-color: #059669;
+}
+
+.save-later {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.save-later:hover {
+  background-color: #e5e7eb;
+}
+
+
+@media screen and (max-width: 768px) {
+  .service-details {
+    flex-direction: column;
+  }
+
+  .service-image,
+  .service-meta {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .service-page {
+    padding: 1.5rem;
+    margin: 1.5rem;
+  }
+}
