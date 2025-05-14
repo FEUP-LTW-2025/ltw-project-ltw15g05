@@ -10,67 +10,42 @@ class User {
     public array $roles;
 
     public function __construct(int $id, string $name, string $username, ?string $email = null, array $roles = []) {
+
         $this->id = $id;
         $this->name = $name;
         $this->username = $username;
-        $this->email = $email;
-        $this->roles = $roles;
     }
 
-    public static function create($name, $username, $password, $email = '') {
+    public static function create($name, $username, $password) {
         $db = Database::getInstance();
         
-        // Check if username already exists
+        
         $stmt = $db->prepare('SELECT id FROM users WHERE username = ?');
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
             throw new Exception('Username already exists');
         }
         
-        // Create the user without email field
         $stmt = $db->prepare('INSERT INTO users (name, username, password) VALUES (?, ?, ?)');
-        $stmt->execute([$name, $username, password_hash($password, PASSWORD_DEFAULT)]);
-        
-        // Set default role as client
-        $userId = (int)$db->lastInsertId();
-        self::addRole($userId, 'client');
-        
-        return $userId;
+        $stmt->execute([$name, $username, sha1($password)]);
+        return $db->lastInsertId();
     }
+    
 
     public static function get_user_by_username_password($username, $password) {
         $db = Database::getInstance();
-        // First get the user by username only
-        $stmt = $db->prepare('SELECT * FROM users WHERE username = ?');
-        $stmt->execute([$username]);
-        
+        $stmt = $db->prepare('SELECT * FROM users WHERE username = ? AND password = ?');
+        $stmt->execute([$username, sha1($password)]);
+    
         $user = $stmt->fetch();
-        
-        // If user exists, verify the password
-        if ($user) {
-            // For backward compatibility with sha1 passwords
-            if (strlen($user['password']) === 40) { // SHA1 hash length is 40
-                if (sha1($password) === $user['password']) {
-                    // Upgrade the password hash
-                    $stmt = $db->prepare('UPDATE users SET password = ? WHERE id = ?');
-                    $stmt->execute([password_hash($password, PASSWORD_DEFAULT), $user['id']]);
-                    return $user;
-                }
-            } else {
-                // Use PHP's built-in password verification
-                if (password_verify($password, $user['password'])) {
-                    // If password needs rehash due to stronger algorithm or cost
-                    if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
-                        $stmt = $db->prepare('UPDATE users SET password = ? WHERE id = ?');
-                        $stmt->execute([password_hash($password, PASSWORD_DEFAULT), $user['id']]);
-                    }
-                    return $user;
-                }
-            }
+    
+        if (!$user) {
+            throw new Exception('Invalid username or password.');
         }
-        
-        return false;
+    
+        return $user;
     }
+    
 
     public static function get_user_by_id(int $id){
         $db = Database::getInstance();

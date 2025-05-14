@@ -12,7 +12,7 @@ if (!$userData) {
     header('Location: form_login.php');
     exit();
 }
-
+/*
 // Load user's services if they are a freelancer
 $services = [];
 $clientTransactions = [];
@@ -22,11 +22,6 @@ $completedOrders = 0;
 $pendingOrders = 0;
 $conversations = [];
 
-// Check for missing service_images table and add a message
-$serviceImagesTableExists = Service::serviceImagesTableExists();
-if (!$serviceImagesTableExists) {
-    $session->addMessage('warning', 'The service_images table is missing. Some image features may not work properly. Please run the database/migrate_service_images.php script to fix this.');
-}
 
 if (in_array('freelancer', $userData['roles'])) {
     $services = Service::getByFreelancerId((int)$userData['id']);
@@ -45,7 +40,7 @@ if (in_array('freelancer', $userData['roles'])) {
 
 // Load client transactions
 $clientTransactions = Transaction::getByClientId((int)$userData['id']);
-
+*/
 // Load conversations
 // This would be implemented in a Message class
 // $conversations = Message::getUserConversations($userData['id']);

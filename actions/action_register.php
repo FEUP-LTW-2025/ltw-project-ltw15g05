@@ -13,9 +13,8 @@ try {
     header('Location: /../pages/form_login.php');
     exit();
 } catch (Exception $e) {
-    $session = Session::getInstance();
-    $session->addMessage('error', $e->getMessage());
-    header('Location: /../pages/form_register.php');
+
+    header('Location: /../pages/form_register.php?error=' . urlencode($e->getMessage()));
     exit();
 }
 ?>

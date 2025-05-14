@@ -16,15 +16,14 @@ if (empty($username) || empty($password)) {
     exit();
 }
 
-$user = User::get_user_by_username_password($username, $password);
-
-if ($user) {
+try {
+    $user = User::get_user_by_username_password($username, $password);
     $session->login((int)$user['id']);
     header('Location: ../pages/main.php');
     exit();
-} else {
-    $session->addMessage('error', 'Invalid username or password');
-    header('Location: ../pages/form_login.php');
+} catch (Exception $e) {
+    header('Location: /../pages/form_login.php?error=' . urlencode($e->getMessage()));
     exit();
 }
+
 ?>

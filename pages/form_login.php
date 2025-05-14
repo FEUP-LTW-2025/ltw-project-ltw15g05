@@ -8,7 +8,5 @@ require_once(__DIR__ . '/../templates/user.tpl.php');
 $session = Session::getInstance();
 $messages = $session->getMessages();
 
-drawHeader();
-drawLoginForm($messages ?? []);
-drawFooter();
+drawLoginForm();
 ?>
