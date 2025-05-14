@@ -1,21 +1,20 @@
 <?php
 declare(strict_types=1);
-require_once(__DIR__ . '/../database/service.class.php')
+require_once(__DIR__ . '/../database/service.class.php');
+require_once(__DIR__ . '/../database/user.class.php');
 ?>
 
-
-
-<?php function drawServicePage(Service $service) { ?>
+<?php function drawServicePage(Service $service, $freelancer) { ?>
     <header> 
-        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/service.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     </header>
     <section class="service-page">
     <h1><?= htmlspecialchars($service->title) ?></h1>
 
-    <div class="service-details">
-      <!-- Supondo que vais adicionar um campo de imagem mais tarde -->
+    <div class="service-details">      
       <img src="/images/services/<?= $service->id ?>.jpg" alt="Imagem do serviço <?= htmlspecialchars($service->title) ?>" class="service-image">
-
+      
       <div class="service-meta">
         <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($service->description)) ?></p>
         <p><strong>Preço:</strong> <?= number_format($service->price, 2) ?>€</p>
@@ -29,12 +28,20 @@ require_once(__DIR__ . '/../database/service.class.php')
       </div>
     </div>
 
-    <!-- Placeholder para nome do freelancer -->
-    <?php
-      // Vais precisar de buscar o nome com base no freelancer_id
-      require_once(__DIR__ . '/../database/user.class.php');
-      $freelancer = User::getUserById($service->freelancer_id); 
-    ?>
-    <p><strong>Freelancer:</strong> <?= htmlspecialchars($freelancer->name) ?></p>
+    <div class="freelancer-info">
+        <img src="/images/user/<?= $freelancer['username']?>.jpg" alt="Imagem do user" class="user-image">
+        <div class="freelancer-meta">
+          <p class="freelancer-name"><strong><?= htmlspecialchars($freelancer['username']) ?></strong></p>
+          <!-- Aqui podes adicionar a avaliação depois -->
+          <p class="freelancer-rating">⭐ 4.8 (52 reviews)</p>
+        </div>
+    </div>
+
+
+    <div class="buy-buttons">
+      <button class="buy-now">Comprar</button>
+      <button class="save-later">Guardar para depois</button>
+    </div>
+
   </section>
 <?php } ?>
