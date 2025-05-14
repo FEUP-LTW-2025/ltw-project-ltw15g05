@@ -14,11 +14,12 @@ declare(strict_types=1);
                         </a>
                         <p><?=htmlspecialchars($service->description)?></p>
                         <ul>
-                            <li><strong>Price:</strong> $<?=number_format($service->price, 2)?></li>
+                            
                             <li><strong>Delivery Time:</strong> <?=intval($service->delivery_time)?> days</li>
                             <li><strong>Photo Style:</strong> <?=htmlspecialchars($service->photo_style)?></li>
                             <li><strong>Equipment Provided:</strong> <?=($service->equipment_provided ? 'Yes' : 'No')?></li>
                             <li><strong>Location:</strong> <?=htmlspecialchars($service->location ?? 'Remote')?></li>
+                            <p class="price">$<?=number_format($service->price, 2)?></p>
                         </ul>
                     </article>
                 </li>

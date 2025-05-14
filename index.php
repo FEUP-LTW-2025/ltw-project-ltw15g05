@@ -21,7 +21,6 @@ if ($uri_path == '/' || $uri_path == '/index.php') {
     require_once(__DIR__ . '/templates/index.tpl.php');
 
     drawFrontPage();
-    drawFooter();
     exit;
 }
 

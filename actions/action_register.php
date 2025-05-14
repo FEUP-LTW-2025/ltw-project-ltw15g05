@@ -7,7 +7,13 @@ $name = $_POST['name'];
 $username = $_POST['username'];
 $password = $_POST['password'];
 
-User::create($name, $username, $password);
+try {
+    User::create($name, $username, $password);
+    header('Location: /../pages/form_login.php');
+    exit();
+} catch (Exception $e) {
+    header('Location: /../pages/form_register.php?error=' . urlencode($e->getMessage()));
+    exit();
+}
 
-header('Location: /../pages/form_login.php');
 ?>
