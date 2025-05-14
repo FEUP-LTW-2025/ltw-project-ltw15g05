@@ -254,6 +254,38 @@
     gap: 0.75rem;
   }
 
+/* ====== ALERTS ====== */
+  .alert {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+  }
+
+  .alert-danger {
+    color: #842029;
+    background-color: #f8d7da;
+    border: 1px solid #f5c2c7;
+  }
+
+  .alert-success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border: 1px solid #badbcc;
+  }
+
+  .alert-warning {
+    color: #664d03;
+    background-color: #fff3cd;
+    border: 1px solid #ffecb5;
+  }
+
+  .alert-info {
+    color: #055160;
+    background-color: #cff4fc;
+    border: 1px solid #b6effb;
+  }
+
 /* ====== UTILITIES ====== */
   .text-center { text-align: center; }
   .mt-1 { margin-top: 0.5rem; }

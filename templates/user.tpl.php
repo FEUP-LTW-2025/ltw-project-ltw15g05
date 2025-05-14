@@ -2,13 +2,22 @@
 declare(strict_types=1);
 ?>
 
-<?php function drawLoginForm() { ?>
+<?php function drawLoginForm(array $messages = []) { ?>
     <div class="auth-wrapper">
         <div class="auth-card">
             <div class="auth-header">
                 <h1 class="auth-title">Welcome Back</h1>
                 <p class="auth-subtitle">Enter your credentials to access your account</p>
             </div>
+            
+            <?php if (!empty($messages)): ?>
+                <?php foreach ($messages as $message): ?>
+                    <div class="alert alert-<?= $message['type'] === 'error' ? 'danger' : $message['type'] ?>">
+                        <?= $message['content'] ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            
             <form action="../actions/action_login.php" method="post">
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
