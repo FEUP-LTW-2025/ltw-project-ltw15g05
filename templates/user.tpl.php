@@ -56,6 +56,11 @@ declare(strict_types=1);
                 <input type="text" id="username" name="username" placeholder="username" required>
             </section>
             <section>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                <small class="note">Email must end with a valid domain (e.g. @gmail.com, @hotmail.com)</small>
+            </section>
+            <section>
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="••••••••" required>
             </section>
