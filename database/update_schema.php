@@ -18,10 +18,38 @@ function addEmailColumnIfNotExists() {
             }
         }
         
-        // Add the column if it doesn't exist
+        // Add the column if it doesn't exist - without UNIQUE constraint initially
         if (!$columnExists) {
-            $db->exec("ALTER TABLE users ADD COLUMN email TEXT UNIQUE");
-            echo "Email column added successfully to users table.\n";
+            try {
+                // First add the column without UNIQUE constraint
+                $db->exec("ALTER TABLE users ADD COLUMN email TEXT");
+                echo "Email column added successfully to users table.\n";
+                
+                // Now create a temporary table with the desired schema
+                $db->exec("CREATE TABLE users_temp (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT UNIQUE NOT NULL,
+                    password TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    email TEXT UNIQUE,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )");
+                
+                // Copy data from the original table to the temp table
+                $db->exec("INSERT INTO users_temp SELECT * FROM users");
+                
+                // Drop the original table
+                $db->exec("DROP TABLE users");
+                
+                // Rename the temp table to the original name
+                $db->exec("ALTER TABLE users_temp RENAME TO users");
+                
+                echo "Table restructured with email as UNIQUE constraint.\n";
+            } catch (PDOException $e) {
+                // If the above fails, just keep the column without UNIQUE constraint
+                echo "Could not add UNIQUE constraint: " . $e->getMessage() . "\n";
+                echo "Email column added but without UNIQUE constraint.\n";
+            }
         } else {
             echo "Email column already exists in users table.\n";
         }

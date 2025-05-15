@@ -16,10 +16,14 @@ if (empty($name) || empty($username) || empty($password)) {
 }
 
 try {
-    User::create($name, $username, $password, $email);
+    $userId = User::create($name, $username, $password, $email);
+    
+    // If we get here, registration was successful
     header('Location: /../pages/form_login.php');
     exit();
 } catch (Exception $e) {
+    // Log error for debugging
+    error_log("Registration error: " . $e->getMessage());
     header('Location: /../pages/form_register.php?error=' . urlencode($e->getMessage()));
     exit();
 }
