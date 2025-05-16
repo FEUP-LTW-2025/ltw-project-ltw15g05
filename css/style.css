@@ -351,6 +351,70 @@ ul.flex.square ul li {
     border: 1px solid #b6effb;
   }
 
+/* ====== CATEGORY NAVIGATION ====== */
+.category-navigation {
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+  background-color: var(--light);
+  box-shadow: var(--shadow-sm);
+  padding: 0.5rem 0;
+}
+
+.category-navigation nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.category-navigation ul {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.category-navigation li {
+  margin: 0;
+  padding: 0;
+}
+
+.category-navigation a {
+  text-decoration: none;
+  color: var(--gray);
+  font-weight: 500;
+  padding: 0.5rem 0;
+  display: inline-block;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.category-navigation a:hover {
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary-light);
+}
+
+.category-navigation li.active a {
+  color: var(--primary-dark);
+  border-bottom: 2px solid var(--primary);
+  font-weight: 600;
+}
+
+/* Media query for mobile responsiveness */
+@media (max-width: 768px) {
+  .category-navigation ul {
+    justify-content: flex-start;
+    padding-bottom: 5px;
+  }
+  
+  .category-navigation li {
+    flex: 0 0 auto;
+  }
+}
+
 /* ====== UTILITIES ====== */
   .text-center { text-align: center; }
   .mt-1 { margin-top: 0.5rem; }

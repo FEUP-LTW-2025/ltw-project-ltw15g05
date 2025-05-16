@@ -2,6 +2,23 @@
 declare(strict_types=1);
 ?>
 
+<?php function drawCategoryNavigation(array $categories, ?int $activeCategoryId = null) { ?>
+    <div class="category-navigation">
+        <nav>
+            <ul>
+                <li<?= $activeCategoryId === null ? ' class="active"' : '' ?>>
+                    <a href="main.php">All Categories</a>
+                </li>
+                <?php foreach ($categories as $category): ?>
+                <li<?= $activeCategoryId === (int)$category['id'] ? ' class="active"' : '' ?>>
+                    <a href="main.php?category=<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></a>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </nav>
+    </div>
+<?php } ?>
+
 <?php function drawServiceList(array $services) { ?>
     <section id="services">
         <ul class="flex square">
@@ -26,4 +43,4 @@ declare(strict_types=1);
             <?php } ?>
         </ul>
     </section>
-<?php } 
+<?php }

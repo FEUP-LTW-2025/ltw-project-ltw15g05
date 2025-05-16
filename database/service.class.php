@@ -121,4 +121,40 @@ class Service {
 
         return $services;
     }
+
+    public static function getAllCategories(): array {
+        $db = Database::getInstance();
+        
+        $stmt = $db->prepare('SELECT * FROM categories ORDER BY name');
+        $stmt->execute();
+        
+        return $stmt->fetchAll();
+    }
+    
+    public static function getServicesByCategory(int $category_id): array {
+        $db = Database::getInstance();
+        
+        $stmt = $db->prepare('SELECT * FROM services WHERE category_id = ?');
+        $stmt->execute([$category_id]);
+        
+        $services = [];
+        
+        while ($service = $stmt->fetch()) {
+            $services[] = new Service(
+                (int)$service['id'],
+                (int)$service['freelancer_id'],
+                $service['title'],
+                $service['description'],
+                (int)$service['category_id'],
+                (float)$service['price'],
+                (int)$service['delivery_time'],
+                $service['photo_style'],
+                (bool)$service['equipment_provided'],
+                $service['location'],
+                $service['created_at']
+            );
+        }
+        
+        return $services;
+    }
 }
