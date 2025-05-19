@@ -36,20 +36,31 @@ if ($deliveryTime !== null) {
 
 // Execute the query
 try {
-    $db = getDatabaseConnection();
+    $db = Database::getInstance();
     $stmt = $db->prepare($sql);
     
     // Bind parameters
     for ($i = 0; $i < count($params); $i++) {
         $stmt->bindValue($i + 1, $params[$i]);
     }
-    
-    $stmt->execute();
+      $stmt->execute();
     
     // Fetch services
     $services = [];
     while ($service = $stmt->fetch()) {
-        $services[] = Service::fromArray($service);
+        $services[] = new Service(
+            (int)$service['id'],
+            (int)$service['freelancer_id'],
+            $service['title'],
+            $service['description'],
+            (int)$service['category_id'],
+            (float)$service['price'],
+            (int)$service['delivery_time'],
+            $service['photo_style'],
+            (bool)$service['equipment_provided'],
+            $service['location'],
+            $service['created_at']
+        );
     }
     
     // Start output buffer to capture the HTML
