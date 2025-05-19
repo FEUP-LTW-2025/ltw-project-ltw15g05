@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Get all dropdown links
-    const filterLinks = document.querySelectorAll('.dropdown-menu a');
+    // Get all dropdown links (both from main nav and filter nav)
+    const filterLinks = document.querySelectorAll('.dropdown-menu a, .dropdown-content a');
     
     // Add click event listeners to all filter links
     filterLinks.forEach(link => {
@@ -8,8 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const url = this.getAttribute('href');
             
+            // Skip if it's just a # link (placeholder)
+            if (url === '#') return;
+            
             // Extract the query parameters
-            const params = new URLSearchParams(url.split('?')[1]);
+            const params = new URLSearchParams(url.split('?')[1] || '');
             
             // Update active states
             updateActiveStates(this);
@@ -22,24 +25,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to update active states in the navigation
     function updateActiveStates(activeLink) {
         // Remove active class from all links
-        document.querySelectorAll('.dropdown-menu a').forEach(link => {
+        document.querySelectorAll('.dropdown-menu a, .dropdown-content a').forEach(link => {
             link.classList.remove('active');
         });
         
         // Remove active class from all top-level links
-        document.querySelectorAll('.nav-categories > li > a').forEach(link => {
+        document.querySelectorAll('.nav-categories > li > a, .filter-tab').forEach(link => {
             link.classList.remove('active');
         });
         
         // Add active class to the clicked link
         activeLink.classList.add('active');
         
-        // Add active class to the parent category
+        // Handle main navigation active states
         const parentCategory = activeLink.closest('li.nav-category');
         if (parentCategory) {
             const categoryLink = parentCategory.querySelector('a');
             if (categoryLink) {
                 categoryLink.classList.add('active');
+            }
+        }
+        
+        // Handle filter navigation active states
+        const filterDropdown = activeLink.closest('.filter-dropdown');
+        if (filterDropdown) {
+            const filterTab = filterDropdown.querySelector('.filter-tab');
+            if (filterTab) {
+                filterTab.classList.add('active');
             }
         }
     }
