@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 require_once(__DIR__ . '/../includes/session.php');
 require_once(__DIR__ . '/../database/service.class.php');
+require_once(__DIR__ . '/../includes/database.php');
+require_once(__DIR__ . '/../database/user.class.php');
+
 
 $session = Session::getInstance();
 $userData = $session->getUser();
@@ -29,3 +32,4 @@ require_once(__DIR__ . '/../templates/service.tpl.php');
 drawHeader(true, $userData);
 drawNewServiceForm($categories, $messages);
 drawFooter();
+?>

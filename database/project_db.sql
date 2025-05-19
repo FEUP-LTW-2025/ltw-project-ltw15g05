@@ -29,6 +29,7 @@ CREATE TABLE services (
     delivery_time INTEGER NOT NULL, -- days
     photo_style TEXT NOT NULL, -- Portrait, Landscape
     equipment_provided BOOLEAN NOT NULL DEFAULT 0,
+    image TEXT,
     location TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (freelancer_id) REFERENCES users(id),

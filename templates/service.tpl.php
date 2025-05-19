@@ -66,6 +66,16 @@ require_once(__DIR__ . '/../database/user.class.php');
                         <input type="file" id="images" name="images[]" class="form-control" accept="image/*" multiple>
                         <small class="form-text">Upload up to 5 images (JPEG, PNG). First image will be the primary image.</small>
                     </div>
+
+                    <div class="form-group">
+                        <label for="photo_style" class="form-label">Photo Style</label>
+                        <select id="photo_style" name="photo_style" class="form-control" required>
+                            <option value="">-- Select a style --</option>
+                            <option value="Portrait">Portrait</option>
+                            <option value="Landscape">Landscape</option>
+                        </select>
+                    </div>
+
                     
                     <div class="form-actions">
                         <a href="profile.php" class="btn btn-outline">Cancel</a>

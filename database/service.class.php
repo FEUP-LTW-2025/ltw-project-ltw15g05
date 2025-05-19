@@ -64,7 +64,7 @@ class Service {
             $service['photo_style'],
             (bool)$service['equipment_provided'],
             $service['location'],
-            $service['created_at']
+            $service['created_at'] 
         );
     }
 
@@ -95,6 +95,66 @@ class Service {
         return $services;
     }
 
+
+        
+    public static function create(
+        int $freelancer_id,
+        string $title,
+        string $description,
+        int $category_id,
+        float $price,
+        int $delivery_time,
+        array $images,
+        bool $featured, // Se estiveres a usar este campo numa tabela separada
+        string $photo_style,
+        bool $equipment_provided,
+        
+        ?string $location
+    ): int {
+        $db = Database::getInstance();
+    
+        $stmt = $db->prepare('
+            INSERT INTO services (
+                freelancer_id,
+                title,
+                description,
+                category_id,
+                price,
+                delivery_time,
+                photo_style,
+                equipment_provided,
+                image,
+                location
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ');
+    
+        $stmt->execute([
+            $freelancer_id,
+            $title,
+            $description,
+            $category_id,
+            $price,
+            $delivery_time,
+            $photo_style,
+            $equipment_provided,
+            $image, 
+            $location
+        ]);
+    
+        $service_id = (int)$db->lastInsertId();
+    
+        // Inserir as imagens se existir tabela ServiceImage
+        if (!empty($images)) {
+            $stmtImage = $db->prepare('INSERT INTO ServiceImage (service_id, path) VALUES (?, ?)');
+            foreach ($images as $imgPath) {
+                $stmtImage->execute([$service_id, $imgPath]);
+            }
+        }
+    
+        return $service_id;
+    }
+    
+
     public static function getAllServices(): array {
         $db = Database::getInstance();
 
@@ -114,6 +174,7 @@ class Service {
                 (int)$service['delivery_time'],
                 $service['photo_style'],
                 (bool)$service['equipment_provided'],
+                $service['image'],
                 $service['location'],
                 $service['created_at']
             );
@@ -121,4 +182,14 @@ class Service {
 
         return $services;
     }
+
+    public static function getAllCategories() : array {
+        $db = Database::getInstance();
+    
+        $stmt = $db->prepare('SELECT id, name FROM categories');
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

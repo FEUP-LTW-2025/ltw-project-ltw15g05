@@ -8,6 +8,8 @@ require_once(__DIR__ . '/../database/service.class.php');
 $session = Session::getInstance();
 $userData = $session->getUser();
 
+header('Location: ../pages/new_service.php');
+
 if (!$userData) {
     header('Location: ../pages/form_login.php');
     exit();
@@ -73,6 +75,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+
+
+        $photo_style = $_POST['photo_style'] ?? '';
+        $equipment_provided = isset($_POST['equipment_provided']) ? 1 : 0;
+        $location = $_POST['location'] ?? null;
+
+        // Validação adicional (opcional)
+        if (!in_array($photo_style, ['Portrait', 'Landscape'])) {
+            $session->addMessage('error', 'Please select a valid photo style');
+            header('Location: ../pages/new_service.php');
+            exit();
+        }
+
         
         // Create the service
         $service_id = Service::create(
@@ -83,9 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $price,
             $delivery_time,
             $images,
-            $featured
+            $featured,
+            $photo_style,
+            $equipment_provided,
+            $location
         );
         
+
         // Success
         $session->addMessage('success', 'Service created successfully');
         header('Location: ../pages/profile.php');

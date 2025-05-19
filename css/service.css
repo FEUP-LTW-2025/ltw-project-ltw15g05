@@ -41,8 +41,8 @@ body {
 
 .service-image {
   flex: 1 1 40%;
-  max-width: 500px;
-  max-height: 500px;
+  width: 400px;
+  height: 450px;
   border-radius: 12px;
   object-fit: cover;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
@@ -64,6 +64,8 @@ body {
   font-size: 1rem;
   color: #374151;
   margin: 0;
+  width: 100%;
+  word-wrap: break-word; /* Se o conteúdo for grande */
 }
 
 .service-meta p strong {
