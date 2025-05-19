@@ -157,4 +157,80 @@ class Service {
         
         return $services;
     }
+    
+    public static function getServicesByPrice(float $min_price, float $max_price): array {
+        $db = Database::getInstance();
+        
+        $stmt = $db->prepare('SELECT * FROM services WHERE price BETWEEN ? AND ?');
+        $stmt->execute([$min_price, $max_price]);
+        
+        $services = [];
+        
+        while ($service = $stmt->fetch()) {
+            $services[] = new Service(
+                (int)$service['id'],
+                (int)$service['freelancer_id'],
+                $service['title'],
+                $service['description'],
+                (int)$service['category_id'],
+                (float)$service['price'],
+                (int)$service['delivery_time'],
+                $service['photo_style'],
+                (bool)$service['equipment_provided'],
+                $service['location'],
+                $service['created_at']
+            );
+        }
+        
+        return $services;
+    }
+    
+    public static function getServicesByDeliveryTime(int $max_days): array {
+        $db = Database::getInstance();
+        
+        $stmt = $db->prepare('SELECT * FROM services WHERE delivery_time <= ?');
+        $stmt->execute([$max_days]);
+        
+        $services = [];
+        
+        while ($service = $stmt->fetch()) {
+            $services[] = new Service(
+                (int)$service['id'],
+                (int)$service['freelancer_id'],
+                $service['title'],
+                $service['description'],
+                (int)$service['category_id'],
+                (float)$service['price'],
+                (int)$service['delivery_time'],
+                $service['photo_style'],
+                (bool)$service['equipment_provided'],
+                $service['location'],
+                $service['created_at']
+            );
+        }
+        
+        return $services;
+    }
+    
+    public static function getPriceRanges(): array {
+        return [
+            ['min' => 0, 'max' => 50, 'label' => 'Under $50'],
+            ['min' => 50, 'max' => 100, 'label' => '$50 - $100'],
+            ['min' => 100, 'max' => 250, 'label' => '$100 - $250'],
+            ['min' => 250, 'max' => 500, 'label' => '$250 - $500'],
+            ['min' => 500, 'max' => 1000, 'label' => '$500 - $1000'],
+            ['min' => 1000, 'max' => 100000, 'label' => 'Over $1000'],
+        ];
+    }
+    
+    public static function getDeliveryTimeRanges(): array {
+        return [
+            ['max' => 1, 'label' => '24 Hours'],
+            ['max' => 3, 'label' => 'Up to 3 days'],
+            ['max' => 7, 'label' => 'Up to 1 week'],
+            ['max' => 14, 'label' => 'Up to 2 weeks'],
+            ['max' => 30, 'label' => 'Up to 1 month'],
+            ['max' => 9999, 'label' => 'Over 1 month'],
+        ];
+    }
 }
