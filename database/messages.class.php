@@ -23,4 +23,26 @@ class Messages {
         ');
         return $stmt->execute([$senderId, $receiverId, $content]);
     }
+
+    public static function getRecentChats(int $userId): array {
+        $db = Database::getInstance();
+        $stmt = $db->prepare("
+            SELECT
+                users.id,
+                users.username,
+                MAX(messages.sent_at) AS last_message_time
+            FROM users
+            JOIN messages ON users.id = CASE
+                WHEN messages.sender_id = :userId THEN messages.receiver_id
+                ELSE messages.sender_id
+            END
+            WHERE :userId IN (messages.sender_id, messages.receiver_id)
+              AND users.id != :userId
+            GROUP BY users.id, users.username
+            ORDER BY last_message_time DESC
+        ");
+        $stmt->execute([':userId' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }
