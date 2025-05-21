@@ -257,9 +257,71 @@ class User {
             return (int)$roleId;
         } catch (PDOException $e) {
             throw new Exception('Error ensuring role exists: ' . $e->getMessage());
+        }    }
+    
+    public static function getAllUsers() {
+        $db = Database::getInstance();
+        
+        try {
+            $stmt = $db->prepare('SELECT id, username, name, email, created_at FROM users ORDER BY id');
+            $stmt->execute();
+            $users = $stmt->fetchAll();
+            
+            // Add roles to each user
+            foreach ($users as &$user) {
+                $user['roles'] = self::getUserRoles((int)$user['id']);
+            }
+            
+            return $users;
+        } catch (PDOException $e) {
+            throw new Exception('Error getting all users: ' . $e->getMessage());
         }
     }
     
+    public static function getUsersWithRole($roleName) {
+        $db = Database::getInstance();
+        
+        try {
+            $stmt = $db->prepare('
+                SELECT u.id, u.username, u.name, u.email, u.created_at 
+                FROM users u
+                JOIN user_roles ur ON u.id = ur.user_id
+                JOIN roles r ON ur.role_id = r.id
+                WHERE r.name = ?
+                ORDER BY u.id
+            ');
+            $stmt->execute([$roleName]);
+            $users = $stmt->fetchAll();
+            
+            return $users;
+        } catch (PDOException $e) {
+            throw new Exception('Error getting users with role: ' . $e->getMessage());
+        }
+    }
+    
+    public static function removeRole(int $userId, string $roleName) {
+        $db = Database::getInstance();
+        
+        try {
+            // Get role ID
+            $stmt = $db->prepare('SELECT id FROM roles WHERE name = ?');
+            $stmt->execute([$roleName]);
+            $roleId = $stmt->fetchColumn();
+            
+            if (!$roleId) {
+                return false; // Role doesn't exist
+            }
+            
+            // Remove role from user
+            $stmt = $db->prepare('DELETE FROM user_roles WHERE user_id = ? AND role_id = ?');
+            $stmt->execute([$userId, $roleId]);
+            
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception('Error removing role: ' . $e->getMessage());
+        }
+    }
+
     public static function updateProfile($id, $name, $username, $currentPassword = '', $newPassword = '', $email = '') {
         $db = Database::getInstance();
         
@@ -267,7 +329,6 @@ class User {
         $stmt = $db->prepare('SELECT * FROM users WHERE id = ?');
         $stmt->execute([$id]);
         $user = $stmt->fetch();
-        
         if (!$user) {
             throw new Exception('User not found');
         }

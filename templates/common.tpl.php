@@ -28,6 +28,15 @@ declare(strict_types=1);
         
         <div class="header-right">
             <?php if ($isLoggedIn): ?>
+                <?php if ($userData && in_array('admin', $userData['roles'])): ?>
+                    <a href="../pages/admin.php" class="btn btn-primary admin-btn" title="Admin Panel">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4.75L19.25 9L12 13.25L4.75 9L12 4.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M9.25 12.25L4.75 15L12 19.25L19.25 15L14.6722 12.2082" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        Admin
+                    </a>
+                <?php endif; ?>
                 <a href="../pages/profile.php" class="profile-icon" title="View Profile">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="2"/>

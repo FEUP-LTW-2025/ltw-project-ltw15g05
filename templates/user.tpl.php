@@ -16,6 +16,9 @@ declare(strict_types=1);
                 <?php if (isset($_GET['error'])): ?>
                     <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
                 <?php endif; ?>
+                <?php if (isset($_GET['message'])): ?>
+                    <p class="success"><?php echo htmlspecialchars($_GET['message']); ?></p>
+                <?php endif; ?>
             <section>
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="username" required>
