@@ -36,6 +36,24 @@ CREATE TABLE services (
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+
+CREATE TABLE cart (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (service_id) REFERENCES services(id)
+);
+
+CREATE TABLE favorites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (service_id) REFERENCES services(id)
+);
+
+
 CREATE TABLE categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL

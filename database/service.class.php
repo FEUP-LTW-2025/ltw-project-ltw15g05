@@ -64,7 +64,7 @@ class Service {
             $service['photo_style'],
             (bool)$service['equipment_provided'],
             $service['location'],
-            $service['created_at'] 
+            $service['created_at']
         );
     }
 
@@ -105,10 +105,8 @@ class Service {
         float $price,
         int $delivery_time,
         array $images,
-        bool $featured, // Se estiveres a usar este campo numa tabela separada
         string $photo_style,
         bool $equipment_provided,
-        
         ?string $location
     ): int {
         $db = Database::getInstance();
@@ -123,9 +121,9 @@ class Service {
                 delivery_time,
                 photo_style,
                 equipment_provided,
-                image,
-                location
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                location,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, DATETIME("now"));
         ');
     
         $stmt->execute([
@@ -137,13 +135,11 @@ class Service {
             $delivery_time,
             $photo_style,
             $equipment_provided,
-            $image, 
             $location
         ]);
     
         $service_id = (int)$db->lastInsertId();
     
-        // Inserir as imagens se existir tabela ServiceImage
         if (!empty($images)) {
             $stmtImage = $db->prepare('INSERT INTO ServiceImage (service_id, path) VALUES (?, ?)');
             foreach ($images as $imgPath) {
@@ -158,7 +154,7 @@ class Service {
     public static function getAllServices(): array {
         $db = Database::getInstance();
 
-        $stmt = $db->prepare('SELECT * FROM services');
+        $stmt = $db->prepare('SELECT * FROM services ORDER BY created_at DESC');
         $stmt->execute();
 
         $services = [];
@@ -174,7 +170,6 @@ class Service {
                 (int)$service['delivery_time'],
                 $service['photo_style'],
                 (bool)$service['equipment_provided'],
-                $service['image'],
                 $service['location'],
                 $service['created_at']
             );

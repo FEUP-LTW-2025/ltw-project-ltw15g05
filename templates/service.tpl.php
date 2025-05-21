@@ -76,7 +76,19 @@ require_once(__DIR__ . '/../database/user.class.php');
                         </select>
                     </div>
 
-                    
+                    <div class="form-group">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" id="location" name="location" class="form-control" placeholder="Enter the service location" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="equipment_provided" class="form-label">Equipment Provided</label>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="equipment_provided" name="equipment_provided" class="form-checkbox">
+                            <label for="equipment_provided">Check if equipment is provided</label>
+                        </div>
+                    </div>
+
                     <div class="form-actions">
                         <a href="profile.php" class="btn btn-outline">Cancel</a>
                         <button type="submit" class="btn btn-primary">Create Service</button>
@@ -232,10 +244,16 @@ require_once(__DIR__ . '/../database/user.class.php');
     </div>
 
     <div class="buy-buttons">
-      <button class="buy-now">Comprar</button>
-      <button class="save-later">Guardar para mais tarde</button>
-    </div>
+        <form action="../actions/action_add_to_cart.php" method="post" style="display: inline;">
+            <input type="hidden" name="service_id" value="<?= $service->id ?>">
+            <button type="submit" class="buy-now">Comprar</button>
+        </form>
 
+        <form action="../actions/action_add_to_favorites.php" method="post" style="display: inline;">
+            <input type="hidden" name="service_id" value="<?= $service->id ?>">
+            <button type="submit" class="save-later">Guardar para mais tarde</button>
+        </form>
+    </div>
 
   </section>
 <?php } ?>
