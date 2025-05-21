@@ -7,7 +7,7 @@
   background-color: white;
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
-  margin-bottom: 2rem;
+  
 }
 
 .header-left, .header-right {

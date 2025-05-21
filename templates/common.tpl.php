@@ -12,9 +12,11 @@ declare(strict_types=1);
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/header-footer.css">
     <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/navigation.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="../favicon.ico">
     <script src="../js/profile.js" defer></script>
+    <script src="../js/navigation_filter.js" defer></script>
 </head>
 <body>
     <header class="site-header">

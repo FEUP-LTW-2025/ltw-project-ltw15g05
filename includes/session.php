@@ -54,5 +54,14 @@ class Session {
         $_SESSION['messages'] = []; // Clear messages after retrieving
         return $messages;
     }
+
+    public function updateUser(array $userData): void {
+        if (!$this->isLoggedIn()) {
+            return;
+        }
+        
+        // Store updated user data in session for quick access
+        $_SESSION['user_data'] = $userData;
+    }
 }
 ?>

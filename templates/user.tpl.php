@@ -56,6 +56,11 @@ declare(strict_types=1);
                 <input type="text" id="username" name="username" placeholder="username" required>
             </section>
             <section>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                <small class="note">Email must end with a valid domain (e.g. @gmail.com, @hotmail.com)</small>
+            </section>
+            <section>
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="••••••••" required>
             </section>
@@ -64,7 +69,63 @@ declare(strict_types=1);
         <p>Already have an account?
             <a href="form_login.php">Sign In</a>
         </p>
->>>>>>> frontpages
     </div>
 
+<?php } ?>
+
+<?php function drawEditProfileForm($userData) { ?>
+    <head>
+        <link rel="stylesheet" href="../css/frontpage.css">
+        <link rel="stylesheet" href="../css/style.css">
+    </head>
+    <div class="edit-profile-container">
+        <h1>Edit Profile</h1>
+        <h2>Update your account information</h2>
+        
+        <form action="../actions/action_edit_profile.php" method="post">
+            <?php if (isset($_GET['error'])): ?>
+                <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
+            <?php endif; ?>
+            
+            <?php if (isset($_GET['success'])): ?>
+                <p class="success"><?php echo htmlspecialchars($_GET['success']); ?></p>
+            <?php endif; ?>
+            
+            <section>
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" value="<?= htmlspecialchars($userData['name']) ?>" required>
+            </section>
+            
+            <section>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="<?= htmlspecialchars($userData['username']) ?>" required>
+            </section>
+            
+            <section>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="<?= htmlspecialchars($userData['email'] ?? '') ?>" placeholder="your.email@example.com">
+                <small class="note">Email must end with a valid domain (e.g. @gmail.com, @hotmail.com)</small>
+            </section>
+            
+            <section>
+                <label for="current_password">Current Password (required for any changes)</label>
+                <input type="password" id="current_password" name="current_password" placeholder="••••••••" required>
+            </section>
+            
+            <section>
+                <label for="new_password">New Password (leave empty to keep current)</label>
+                <input type="password" id="new_password" name="new_password" placeholder="••••••••">
+            </section>
+            
+            <section>
+                <label for="confirm_password">Confirm New Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••">
+            </section>
+            
+            <div class="button-group">
+                <a href="profile.php" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
 <?php } ?>
