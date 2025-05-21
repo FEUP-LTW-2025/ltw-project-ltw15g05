@@ -109,18 +109,21 @@ body {
 }
 
 .message-button {
-  background-color: #3b82f6;
+  background-color: #3498db;
   color: white;
-  border: none;
-  padding: 0.2rem 0.3rem;
+  padding: 10px;
   border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin-left: 0.5em 0.5em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  z-index: 10; /* ensure it's above */
+  position: relative;
 }
 
 .message-button:hover {
-  background-color: #2563eb;
+  background-color: #2980b9;
 }
 
 .freelancer-rating {

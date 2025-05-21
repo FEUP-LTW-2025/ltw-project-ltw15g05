@@ -205,10 +205,10 @@ require_once(__DIR__ . '/../database/user.class.php');
     
       <div class="freelancer-meta">
         <div class="freelancer-top">
-          <p class="freelancer-name"><?= htmlspecialchars($freelancer['username']) ?></p>
-          <button class="message-button" title="Enviar mensagem">
-            <i class="fa-solid fa-envelope"></i>
-          </button>
+            <p class="freelancer-name"><?= htmlspecialchars($freelancer['username']) ?></p>
+            <a href="../pages/chat.php?chat_with=<?= $freelancer['id']?>" class="message-button">
+                enviar mensagem
+            </a>
         </div>
         <div class="freelancer-rating">
             <i class="fa-solid fa-star" style="color: #fbbf24;"></i> 
