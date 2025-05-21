@@ -13,7 +13,7 @@ $content = trim($_POST['content'] ?? '');
 
 if ($receiverId && $content) {
     Messages::sendMessage($userId, $receiverId, $content);
-    header("Location: ../pages/chat.php?user=" . urlencode($receiverId));
+    header("Location: ../pages/chat.php?chat_with=" . urlencode($receiverId));
     exit();
 } else {
     die('Invalid input.');

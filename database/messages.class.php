@@ -26,22 +26,32 @@ class Messages {
 
     public static function getRecentChats(int $userId): array {
         $db = Database::getInstance();
-        $stmt = $db->prepare("
-            SELECT
-                users.id,
-                users.username,
-                MAX(messages.sent_at) AS last_message_time
-            FROM users
-            JOIN messages ON users.id = CASE
-                WHEN messages.sender_id = :userId THEN messages.receiver_id
-                ELSE messages.sender_id
-            END
-            WHERE :userId IN (messages.sender_id, messages.receiver_id)
-              AND users.id != :userId
-            GROUP BY users.id, users.username
+    
+        $stmt = $db->prepare('
+            SELECT u.id, u.name, u.username,
+                   m.content AS last_message_content,
+                   MAX(m.sent_at) AS last_message_time
+            FROM (
+                SELECT sender_id AS user_id, MAX(sent_at) AS last_message_time
+                FROM messages
+                WHERE receiver_id = ?
+                GROUP BY sender_id
+                UNION
+                SELECT receiver_id AS user_id, MAX(sent_at) AS last_message_time
+                FROM messages
+                WHERE sender_id = ?
+                GROUP BY receiver_id
+            ) AS last_chats
+            JOIN users u ON u.id = last_chats.user_id
+            JOIN messages m ON (
+                ((m.sender_id = ? AND m.receiver_id = u.id) OR (m.sender_id = u.id AND m.receiver_id = ?))
+                AND m.sent_at = last_chats.last_message_time
+            )
+            GROUP BY u.id
             ORDER BY last_message_time DESC
-        ");
-        $stmt->execute([':userId' => $userId]);
+        ');
+    
+        $stmt->execute([$userId, $userId, $userId, $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     

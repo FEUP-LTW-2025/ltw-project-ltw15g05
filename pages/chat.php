@@ -15,7 +15,7 @@ if (!$userData) {
     exit();
 }
 $currentUserId = $_SESSION['user_id'];
-$chatWithId = $_GET['user'] ?? null;
+$chatWithId = $_GET['chat_with'] ?? null;
 $recentChats = Messages::getRecentChats($currentUserId);
 
 if (!$chatWithId) {
@@ -26,12 +26,5 @@ $messages = Messages::getMessagesBetween($currentUserId, $chatWithId);
 
 drawHeader(true);
 drawChat($messages, $currentUserId, $chatWithId, $recentChats);
-drawFooter();
 ?>
 
-<?php
-require_once '../includes/session.php';
-$session = Session::getInstance();
-$currentUserId = $session->getUserId();
-echo "You are logged in as user #$currentUserId";
-?>
