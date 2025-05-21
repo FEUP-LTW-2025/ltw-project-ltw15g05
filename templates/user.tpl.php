@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 <?php function drawLoginForm() { ?>
     <head>
-        <link rel="stylesheet" href="../css/frontpage.css">
+        <link rel="stylesheet" href="../css/style.css">
     </head>
     <div class="autenticação">
         <a href="../index.php">
@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 <?php function drawRegisterForm() { ?>
     <head>
-        <link rel="stylesheet" href="../css/frontpage.css">
+        <link rel="stylesheet" href="../css/style.css">
     </head>
     <div class="autenticação">
         <a href="../index.php">
@@ -75,7 +75,6 @@ declare(strict_types=1);
 
 <?php function drawEditProfileForm($userData) { ?>
     <head>
-        <link rel="stylesheet" href="../css/frontpage.css">
         <link rel="stylesheet" href="../css/style.css">
     </head>
     <div class="edit-profile-container">

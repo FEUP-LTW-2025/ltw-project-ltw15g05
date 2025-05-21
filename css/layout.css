@@ -1,0 +1,492 @@
+/**
+ * LAYOUT.CSS
+ * Contains structural styling for the site layout
+ * 
+ * This file includes:
+ * - Grid layouts and containers
+ * - Flexbox arrangements
+ * - Header and footer styling
+ * - Sidebar and navigation structure
+ * - Responsive layout adjustments
+ * - Page-level spacing and positioning
+ */
+:root {
+    --primary: #4f46e5;
+    --primary-light: #6366f1;
+    --primary-dark: #4338ca;
+    --gray: #6b7280;
+    --dark: #111827;
+    --light: #f9fafb;
+    --border: #e5e7eb;
+    --radius: 8px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Core Layout */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.5;
+    color: var(--dark);
+    background-color: var(--light);
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header Layout */
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: white;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Navigation styles */
+.main-nav {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e6e6e6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    width: 100%;
+    position: relative;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-categories {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-category {
+    position: relative;
+}
+
+.nav-category > a {
+    display: block;
+    padding: 15px 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-category > a:hover {
+    background-color: #f8f9fa;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.website-icon {
+    height: 28px;
+    width: 28px;
+}
+
+.website-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Main Content Layout */
+main {
+    min-height: calc(100vh - 72px - 72px); /* viewport height minus header and footer */
+}
+
+/* Footer Layout */
+.site-footer {
+    background-color: var(--dark);
+    color: white;
+    padding: 3rem 0;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.footer-section h3:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.footer-left, .footer-right {
+    display: flex;
+    align-items: center;
+}
+
+.copyright {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.875rem;
+}
+
+.help-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.help-link:hover {
+    color: var(--primary-dark);
+}
+
+/* Profile Layout */
+.profile-section {
+    padding: 2rem 0;
+}
+
+.profile-header {
+    background-color: var(--primary);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.profile-body {
+    padding: 1.5rem;
+}
+
+.profile-detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-label {
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.profile-roles {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.profile-tabs {
+    margin-top: 2rem;
+}
+
+/* Service Grid Layout */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.service-image {
+    height: 180px;
+    overflow: hidden;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.service-details {
+    padding: 1rem;
+}
+
+.service-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Order and Earnings Layout */
+.orders-list, .earnings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.order-details {
+    flex: 1;
+}
+
+.earnings-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Messages Layout */
+.messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.conversation-info {
+    flex: 1;
+}
+
+/* Frontpage Layout */
+.front-page {
+    padding: 10rem;
+    color: #FFFFFF;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #4a3582;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.front-page .left-section {
+    max-width: 60%;
+}
+
+/* Fixed Action Button Layout */
+.add-service-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background-color: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    z-index: 100;
+}
+
+.add-service-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Chat Layout */
+.chat-page {
+    display: flex;
+    max-width: 1525px;
+    height: 80vh;
+    margin: 1.5rem auto;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+.chat-sidebar {
+    width: 300px;
+    background-color: white;
+    border-right: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    overflow-y: auto;
+}
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.chat-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    background-color: white;
+    font-weight: bold;
+    border-top-right-radius: 1rem;
+    height: 6vh;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background-color: #f3f4f6;
+}
+
+.chat-form {
+    display: flex;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    background-color: white;
+    border-bottom-right-radius: 1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .site-header {
+        padding: 1rem;
+    }
+    
+    .front-page {
+        padding: 5rem 1rem;
+        flex-direction: column;
+    }
+    
+    .front-page .left-section {
+        max-width: 100%;
+    }
+    
+    .front-page .logo {
+        max-width: 60%;
+        margin: 1rem 0;
+    }
+    
+    .profile-detail {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .profile-actions {
+        flex-direction: column;
+    }
+    
+    .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-actions {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    
+    .conversation-item {
+        flex-wrap: wrap;
+    }
+    
+    .chat-page {
+        flex-direction: column;
+        height: 90vh;
+    }
+    
+    .chat-sidebar {
+        width: 100%;
+        height: 250px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .chat-container {
+        height: calc(100vh - 250px);
+    }
+}

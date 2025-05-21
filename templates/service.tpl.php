@@ -7,7 +7,6 @@ require_once(__DIR__ . '/../database/user.class.php');
 <?php function drawNewServiceForm(array $categories, array $messages = []) { ?>
     <div class="container">
         <section class="form-section">
-            <h1 class="section-title">Create New Service</h1>
             
             <?php if (!empty($messages)): ?>
                 <?php foreach ($messages as $message): ?>
@@ -198,9 +197,8 @@ require_once(__DIR__ . '/../database/user.class.php');
 
 
 
-<?php function drawServicePage(Service $service, $freelancer) { ?>
-    <header> 
-        <link rel="stylesheet" href="/css/service.css">
+<?php function drawServicePage(Service $service, $freelancer) { ?>    <header> 
+        <link rel="stylesheet" href="/css/style.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </header>
@@ -212,24 +210,22 @@ require_once(__DIR__ . '/../database/user.class.php');
       
       <div class="service-meta">
         <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($service->description)) ?></p>
-        <p><strong>Tempo de entrega:</strong> <?= $service->delivery_time ?> dias</p>
-        <p><strong>Estilo Fotográfico:</strong> <?= htmlspecialchars($service->photo_style) ?></p>
-        <p><strong>Equipamento fornecido:</strong> <?= $service->equipment_provided ? 'Sim' : 'Não' ?></p>
+        <p><strong>Tempo de entrega:</strong> <?= $service->delivery_time ?> dias</p>        <p><strong>Photo Style:</strong> <?= htmlspecialchars($service->photo_style) ?></p>
+        <p><strong>Equipment Provided:</strong> <?= $service->equipment_provided ? 'Yes' : 'No' ?></p>
         <?php if (!empty($service->location)) : ?>
-          <p><strong>Localização:</strong> <?= htmlspecialchars($service->location) ?></p>
+          <p><strong>Location:</strong> <?= htmlspecialchars($service->location) ?></p>
         <?php endif; ?>
-        <p><strong>Data de criação:</strong> <?= date('d/m/Y', strtotime($service->created_at)) ?></p>
+        <p><strong>Creation Date:</strong> <?= date('d/m/Y', strtotime($service->created_at)) ?></p>
       </div>
     </div>
 
     <div class="freelancer-info">
       <img src="/images/user/<?= $freelancer['username']?>.jpg" alt="Imagem do user" class="user-image">
-    
       <div class="freelancer-meta">
         <div class="freelancer-top">
             <p class="freelancer-name"><?= htmlspecialchars($freelancer['username']) ?></p>
             <a href="../pages/chat.php?chat_with=<?= $freelancer['id']?>" class="message-button">
-                enviar mensagem
+                Send Message
             </a>
         </div>
         <div class="freelancer-rating">
@@ -241,17 +237,15 @@ require_once(__DIR__ . '/../database/user.class.php');
 
     <div class="price-highlight">
       <span><?= number_format($service->price, 2) ?>€</span>
-    </div>
-
-    <div class="buy-buttons">
+    </div>    <div class="buy-buttons">
         <form action="../actions/action_add_to_cart.php" method="post" style="display: inline;">
             <input type="hidden" name="service_id" value="<?= $service->id ?>">
-            <button type="submit" class="buy-now">Comprar</button>
+            <button type="submit" class="buy-now">Buy</button>
         </form>
 
         <form action="../actions/action_add_to_favorites.php" method="post" style="display: inline;">
             <input type="hidden" name="service_id" value="<?= $service->id ?>">
-            <button type="submit" class="save-later">Guardar para mais tarde</button>
+            <button type="submit" class="save-later">Save for Later</button>
         </form>
     </div>
 

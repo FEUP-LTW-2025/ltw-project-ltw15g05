@@ -10,9 +10,6 @@ declare(strict_types=1);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlashMe - Flashcard Learning</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/header-footer.css">
-    <link rel="stylesheet" href="../css/profile.css">
-    <link rel="stylesheet" href="../css/navigation.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="../favicon.ico">
     <script src="../js/profile.js" defer></script>

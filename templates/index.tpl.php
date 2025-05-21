@@ -6,7 +6,7 @@ declare(strict_types=1);
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <link rel="stylesheet" href="../css/frontpage.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <div class="front-page">

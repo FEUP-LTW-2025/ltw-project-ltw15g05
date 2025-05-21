@@ -11,6 +11,7 @@ function drawMessage($message, $currentUserId) {
 
 <?php function drawChat($messages, $currentUserId, $chatWithId, $recentChats){ ?>
     <head>
+        <link rel="stylesheet" href="../css/style.css">
         <link rel="stylesheet" href="../css/chat.css">
     </head>
     <body>
