@@ -73,11 +73,16 @@ function logAdminAction($adminId, $action, $targetUserId = null) {
 // Get all users for the admin panel
 $users = User::getAllUsers();
 
+// Get all categories for category management
+require_once(__DIR__ . '/../database/service.class.php');
+$categories = Service::getAllCategories();
+
 // Include admin template
 require_once(__DIR__ . '/../templates/common.tpl.php');
 require_once(__DIR__ . '/../templates/admin.tpl.php');
 
 drawHeader(true, $user);
 drawAdminPanel($users);
+drawCategoryManagement($categories);
 drawFooter();
 ?>

@@ -21,6 +21,9 @@ if (!$currentUser) {
 $profileUserId = isset($_GET['id']) && in_array('admin', $currentUser['roles']) 
     ? (int)$_GET['id'] 
     : (int)$currentUser['id'];
+    
+// For debugging
+error_log("Current user ID: " . $currentUser['id'] . ", Profile user ID: " . $profileUserId);
 
 // Get the user data for the profile we're viewing
 $userData = $profileUserId === $currentUser['id'] 
@@ -32,6 +35,10 @@ if (!$userData) {
     header('Location: profile.php');
     exit();
 }
+
+// Get any success or error messages from query parameters
+$successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success']) : null;
+$errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
 /*
 // Load user's services if they are a freelancer
 $services = [];
@@ -68,6 +75,10 @@ $clientTransactions = Transaction::getByClientId((int)$userData['id']);
 require_once(__DIR__ . '/../templates/common.tpl.php');
 require_once(__DIR__ . '/../templates/profile.tpl.php');
 
+// Debug info
+$isViewingOtherProfile = $profileUserId !== $currentUser['id'];
+error_log("Is viewing other profile: " . ($isViewingOtherProfile ? 'Yes' : 'No'));
+
 drawHeader(true, $currentUser);
-drawProfile($userData, $profileUserId !== $currentUser['id'], $currentUser);
+drawProfile($userData, $isViewingOtherProfile, $currentUser);
 drawFooter();

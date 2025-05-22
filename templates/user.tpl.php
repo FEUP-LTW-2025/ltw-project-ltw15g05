@@ -76,15 +76,23 @@ declare(strict_types=1);
 
 <?php } ?>
 
-<?php function drawEditProfileForm($userData) { ?>
+<?php function drawEditProfileForm($userData, $isAdminEdit = false, $currentUser = null) { ?>
     <head>
         <link rel="stylesheet" href="../css/style.css">
     </head>
     <div class="edit-profile-container">
-        <h1>Edit Profile</h1>
-        <h2>Update your account information</h2>
+        <?php if ($isAdminEdit): ?>
+            <div class="admin-navigation" style="margin-bottom: 1rem;">
+                <a href="../pages/admin.php" class="btn-secondary">← Back to Admin Panel</a>
+            </div>
+            <h1>Edit User Profile</h1>
+            <h2>Admin editing: <?= htmlspecialchars($userData['name']) ?> (@<?= htmlspecialchars($userData['username']) ?>)</h2>
+        <?php else: ?>
+            <h1>Edit Profile</h1>
+            <h2>Update your account information</h2>
+        <?php endif; ?>
         
-        <form action="../actions/action_edit_profile.php" method="post">
+        <form action="../actions/action_edit_profile.php<?= $isAdminEdit ? '?id=' . $userData['id'] : '' ?>" method="post">
             <?php if (isset($_GET['error'])): ?>
                 <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
             <?php endif; ?>
@@ -109,10 +117,14 @@ declare(strict_types=1);
                 <small class="note">Email must end with a valid domain (e.g. @gmail.com, @hotmail.com)</small>
             </section>
             
+            <?php if (!$isAdminEdit): ?>
             <section>
                 <label for="current_password">Current Password (required for any changes)</label>
                 <input type="password" id="current_password" name="current_password" placeholder="••••••••" required>
             </section>
+            <?php else: ?>
+            <input type="hidden" name="admin_edit" value="1">
+            <?php endif; ?>
             
             <section>
                 <label for="new_password">New Password (leave empty to keep current)</label>
@@ -125,7 +137,11 @@ declare(strict_types=1);
             </section>
             
             <div class="button-group">
+                <?php if ($isAdminEdit): ?>
+                <a href="profile.php?id=<?= $userData['id'] ?>" class="btn-secondary">Cancel</a>
+                <?php else: ?>
                 <a href="profile.php" class="btn-secondary">Cancel</a>
+                <?php endif; ?>
                 <button type="submit" class="btn-primary">Save Changes</button>
             </div>
         </form>

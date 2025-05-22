@@ -4,7 +4,9 @@ declare(strict_types=1);
 /**
  * Draw the admin panel with user management features
  * 
- * @param array $users List of all users with their details
+ * @param array $users List of all us                                <td><?= htmlspecialchars($category['name']) ?></td>
+                                <td><?= htmlspecialchars($category['description'] ?? 'No description') ?></td>
+                                <td><?= Service::countServicesInCategory((int)$category['id']) ?></td> with their details
  */
 function drawAdminPanel(array $users) { ?>
     <main class="admin-panel">
@@ -86,4 +88,116 @@ function drawAdminPanel(array $users) { ?>
             </section>
         </div>
     </main>
+<?php } ?>
+
+<?php function drawCategoryManagement(array $categories) { ?>
+    <section class="admin-section">
+        <h2>Category Management</h2>
+        
+        <div class="category-actions">
+            <a href="#" class="btn btn-primary" id="add-category-btn">
+                <i class="fas fa-plus"></i> Add New Category
+            </a>
+        </div>
+        
+        <!-- Add Category Form (hidden by default) -->        <div id="add-category-form" class="form-container" style="display: none;">
+            <form action="../actions/action_add_category.php" method="post" class="admin-form">
+                <div class="form-group">
+                    <label for="category-name" class="form-label">Category Name</label>
+                    <input type="text" id="category-name" name="name" class="form-control" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">Save Category</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-add-category">Cancel</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Services</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($categories)): ?>
+                        <tr>
+                            <td colspan="5" class="no-data">No categories found</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($categories as $category): ?>                            <tr>
+                                <td><?= $category['id'] ?></td>
+                                <td><?= htmlspecialchars($category['name']) ?></td>
+                                <td>No description</td>
+                                <td><?= Service::countServicesInCategory((int)$category['id']) ?></td>
+                                <td class="actions">
+                                    <a href="#" class="btn btn-sm edit-category" data-id="<?= $category['id'] ?>" 
+                                       data-name="<?= htmlspecialchars($category['name']) ?>" 
+                                       data-description="">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="../actions/action_delete_category.php?id=<?= $category['id'] ?>" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Edit Category Form (hidden by default) -->        <div id="edit-category-form" class="form-container" style="display: none;">
+            <form action="../actions/action_update_category.php" method="post" class="admin-form">
+                <input type="hidden" id="edit-category-id" name="id" value="">
+                <div class="form-group">
+                    <label for="edit-category-name" class="form-label">Category Name</label>
+                    <input type="text" id="edit-category-name" name="name" class="form-control" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">Update Category</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-edit-category">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // Add category form toggle
+        document.getElementById('add-category-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('add-category-form').style.display = 'block';
+        });
+          document.getElementById('cancel-add-category').addEventListener('click', function() {
+            document.getElementById('add-category-form').style.display = 'none';
+            document.getElementById('category-name').value = '';
+        });
+          // Edit category functionality
+        const editButtons = document.querySelectorAll('.edit-category');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                
+                document.getElementById('edit-category-id').value = id;
+                document.getElementById('edit-category-name').value = name;
+                document.getElementById('edit-category-form').style.display = 'block';
+                
+                // Scroll to form
+                document.getElementById('edit-category-form').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        document.getElementById('cancel-edit-category').addEventListener('click', function() {
+            document.getElementById('edit-category-form').style.display = 'none';
+        });
+    </script>
 <?php } ?>
