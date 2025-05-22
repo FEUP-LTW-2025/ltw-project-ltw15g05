@@ -28,13 +28,20 @@ function formatMessageTime(string $timestamp): string {
 }
 ?>
 
-<?php function drawProfile(array $userData) { 
+<?php function drawProfile(array $userData, bool $isViewingOtherProfile = false, array $currentUser = null) { 
     $roles = $userData['roles'] ?? ['client'];
     $isFreelancer = in_array('freelancer', $roles);
     $isAdmin = in_array('admin', $roles);
+    $viewerIsAdmin = $currentUser && in_array('admin', $currentUser['roles']);
 ?>
     <section class="profile-section">
         <div class="container">
+            <?php if ($isViewingOtherProfile && $viewerIsAdmin): ?>
+                <div class="admin-navigation" style="margin-bottom: 1rem;">
+                    <a href="../pages/admin.php" class="btn btn-outline btn-sm">← Back to Admin Panel</a>
+                </div>
+            <?php endif; ?>
+            
             <div class="profile-card">
                 <div class="profile-header">
                     <div class="profile-avatar">
@@ -66,13 +73,15 @@ function formatMessageTime(string $timestamp): string {
                     </div>
                     
                     <div class="profile-actions">
-                        <a href="edit_profile.php" class="btn btn-outline">Edit Profile</a>
-                        <?php if (!$isFreelancer): ?>
-                            <form action="../actions/action_become_freelancer.php" method="post">
-                                <button type="submit" class="btn btn-primary">Become a Freelancer</button>
-                            </form>
-                        <?php else: ?>
-                            <a href="new_service.php" class="btn btn-primary">Create New Service</a>
+                        <?php if (!$isViewingOtherProfile): ?>
+                            <a href="edit_profile.php" class="btn btn-outline">Edit Profile</a>
+                            <?php if (!$isFreelancer): ?>
+                                <form action="../actions/action_become_freelancer.php" method="post">
+                                    <button type="submit" class="btn btn-primary">Become a Freelancer</button>
+                                </form>
+                            <?php else: ?>
+                                <a href="new_service.php" class="btn btn-primary">Create New Service</a>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </div>

@@ -4,12 +4,32 @@ declare(strict_types=1);
 require_once(__DIR__ . '/../includes/session.php');
 require_once(__DIR__ . '/../database/service.class.php');
 require_once(__DIR__ . '/../database/transaction.class.php');
+require_once(__DIR__ . '/../database/user.class.php');
 
 $session = Session::getInstance();
-$userData = $session->getUser();
+$currentUser = $session->getUser();
 
-if (!$userData) {
+// Check if the user is logged in
+if (!$currentUser) {
     header('Location: form_login.php');
+    exit();
+}
+
+// Determine which user profile to display
+// If an ID is provided in the URL and the current user is an admin, show that user's profile
+// Otherwise, show the current user's own profile
+$profileUserId = isset($_GET['id']) && in_array('admin', $currentUser['roles']) 
+    ? (int)$_GET['id'] 
+    : (int)$currentUser['id'];
+
+// Get the user data for the profile we're viewing
+$userData = $profileUserId === $currentUser['id'] 
+    ? $currentUser 
+    : User::get_user_by_id($profileUserId);
+
+// If the user doesn't exist, redirect to the user's own profile
+if (!$userData) {
+    header('Location: profile.php');
     exit();
 }
 /*
@@ -48,6 +68,6 @@ $clientTransactions = Transaction::getByClientId((int)$userData['id']);
 require_once(__DIR__ . '/../templates/common.tpl.php');
 require_once(__DIR__ . '/../templates/profile.tpl.php');
 
-drawHeader(true, $userData);
-drawProfile($userData);
+drawHeader(true, $currentUser);
+drawProfile($userData, $profileUserId !== $currentUser['id'], $currentUser);
 drawFooter();
