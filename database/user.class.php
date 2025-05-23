@@ -322,7 +322,7 @@ class User {
         }
     }
 
-    public static function updateProfile($id, $name, $username, $currentPassword = '', $newPassword = '', $email = '') {
+    public static function updateProfile($id, $name, $username, $currentPassword = '', $newPassword = '', $email = '', $isAdminEdit = false) {
         $db = Database::getInstance();
         
         // First get the current user data
@@ -342,18 +342,27 @@ class User {
             }
         }
         
-        // Verify current password always required for any changes
-        $isPasswordValid = false;
+        // Verify current password only when changing password (and not admin edit)
+        $isAdminEdit = func_num_args() > 5 && func_get_arg(5) === true;
         
-        // For backward compatibility with sha1 passwords
-        if (strlen($user['password']) === 40) { // SHA1 hash length
-            $isPasswordValid = (sha1($currentPassword) === $user['password']);
-        } else {
-            $isPasswordValid = password_verify($currentPassword, $user['password']);
-        }
-        
-        if (!$isPasswordValid) {
-            throw new Exception('Current password is incorrect');
+        if (!empty($newPassword) && !$isAdminEdit) {
+            // If current password is empty, throw error
+            if (empty($currentPassword)) {
+                throw new Exception('Current password is required when changing password');
+            }
+            
+            $isPasswordValid = false;
+            
+            // For backward compatibility with sha1 passwords
+            if (strlen($user['password']) === 40) { // SHA1 hash length
+                $isPasswordValid = (sha1($currentPassword) === $user['password']);
+            } else {
+                $isPasswordValid = password_verify($currentPassword, $user['password']);
+            }
+            
+            if (!$isPasswordValid) {
+                throw new Exception('Current password is incorrect');
+            }
         }
         
         // Check if email is provided and different from current

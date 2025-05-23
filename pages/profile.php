@@ -23,10 +23,11 @@ $profileUserId = isset($_GET['id']) && in_array('admin', $currentUser['roles'])
     : (int)$currentUser['id'];
     
 // For debugging
-error_log("Current user ID: " . $currentUser['id'] . ", Profile user ID: " . $profileUserId);
+error_log("Current user ID: " . $currentUser['id'] . " (type: " . gettype($currentUser['id']) . 
+         "), Profile user ID: " . $profileUserId . " (type: " . gettype($profileUserId) . ")");
 
 // Get the user data for the profile we're viewing
-$userData = $profileUserId === $currentUser['id'] 
+$userData = $profileUserId === (int)$currentUser['id'] 
     ? $currentUser 
     : User::get_user_by_id($profileUserId);
 
@@ -72,12 +73,12 @@ $clientTransactions = Transaction::getByClientId((int)$userData['id']);
 // This would be implemented in a Message class
 // $conversations = Message::getUserConversations($userData['id']);
 
+// Determine if the user is viewing someone else's profile
+$isViewingOtherProfile = $profileUserId !== (int)$currentUser['id'];
+error_log("Is viewing other profile: " . ($isViewingOtherProfile ? 'Yes' : 'No'));
+
 require_once(__DIR__ . '/../templates/common.tpl.php');
 require_once(__DIR__ . '/../templates/profile.tpl.php');
-
-// Debug info
-$isViewingOtherProfile = $profileUserId !== $currentUser['id'];
-error_log("Is viewing other profile: " . ($isViewingOtherProfile ? 'Yes' : 'No'));
 
 drawHeader(true, $currentUser);
 drawProfile($userData, $isViewingOtherProfile, $currentUser);

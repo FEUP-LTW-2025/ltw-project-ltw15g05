@@ -81,7 +81,7 @@ declare(strict_types=1);
         <link rel="stylesheet" href="../css/style.css">
     </head>
     <div class="edit-profile-container">
-        <?php if ($isAdminEdit): ?>
+        <?php if ($isAdminEdit && isset($currentUser) && in_array('admin', $currentUser['roles'])): ?>
             <div class="admin-navigation" style="margin-bottom: 1rem;">
                 <a href="../pages/admin.php" class="btn-secondary">← Back to Admin Panel</a>
             </div>
@@ -93,6 +93,8 @@ declare(strict_types=1);
         <?php endif; ?>
         
         <form action="../actions/action_edit_profile.php<?= $isAdminEdit ? '?id=' . $userData['id'] : '' ?>" method="post">
+            <!-- Debug info -->
+            <?php error_log("Form action: ../actions/action_edit_profile.php" . ($isAdminEdit ? '?id=' . $userData['id'] : '')); ?>
             <?php if (isset($_GET['error'])): ?>
                 <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
             <?php endif; ?>
@@ -119,8 +121,9 @@ declare(strict_types=1);
             
             <?php if (!$isAdminEdit): ?>
             <section>
-                <label for="current_password">Current Password (required for any changes)</label>
-                <input type="password" id="current_password" name="current_password" placeholder="••••••••" required>
+                <label for="current_password">Current Password (required only when changing password)</label>
+                <input type="password" id="current_password" name="current_password" placeholder="••••••••">
+                <small class="note">Enter your current password if you are changing your password, otherwise leave it empty.</small>
             </section>
             <?php else: ?>
             <input type="hidden" name="admin_edit" value="1">

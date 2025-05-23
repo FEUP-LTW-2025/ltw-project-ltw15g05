@@ -32,7 +32,7 @@ if (!$userData) {
 }
 
 // Determine if the current user is editing someone else's profile (admin edit mode)
-$isAdminEdit = $editUserId !== $currentUser['id'];
+$isAdminEdit = $editUserId !== (int)$currentUser['id'] && in_array('admin', $currentUser['roles']);
 
 drawHeader(true, $currentUser);
 drawEditProfileForm($userData, $isAdminEdit, $currentUser);
