@@ -63,7 +63,7 @@ require_once(__DIR__ . '/../database/user.class.php');
                     
                     <div class="form-group">
                         <label for="images" class="form-label">Service Images</label>
-                        <input type="file" id="images" name="images[]" class="form-control" accept="image/*" multiple>
+                        <input type="file" id="image" name="image" class="form-control" accept="image/jpeg, image/png" required>
                         <small class="form-text">Upload up to 5 images (JPEG, PNG). First image will be the primary image.</small>
                     </div>
 
@@ -223,21 +223,31 @@ require_once(__DIR__ . '/../database/user.class.php');
     </div>
 
     <div class="freelancer-info">
-      <img src="/images/user/<?= $freelancer['username']?>.jpg" alt="Imagem do user" class="user-image">
-    
-      <div class="freelancer-meta">
-        <div class="freelancer-top">
-            <p class="freelancer-name"><?= htmlspecialchars($freelancer['username']) ?></p>
-            <a href="../pages/chat.php?chat_with=<?= $freelancer['id']?>" class="message-button">
-                enviar mensagem
-            </a>
+        <?php
+            $username = $freelancer['username'];
+            $profilePath = "/images/user/$username.jpg";
+            $absolutePath = __DIR__ . "/../images/user/$username.jpg";
+
+            if (!file_exists($absolutePath)) {
+                $profilePath = "/images/user/default.jpg";
+            }
+        ?>
+        <img src="<?= $profilePath ?>" alt="Imagem do user" class="user-image">
+
+        <div class="freelancer-meta">
+            <div class="freelancer-top">
+                <p class="freelancer-name"><?= htmlspecialchars($freelancer['username']) ?></p>
+                <a href="../pages/chat.php?chat_with=<?= $freelancer['id']?>" class="message-button">
+                    Messages
+                </a>
+            </div>
+            <div class="freelancer-rating">
+                <i class="fa-solid fa-star" style="color: #fbbf24;"></i> 
+                4.9 (120)
+            </div>
         </div>
-        <div class="freelancer-rating">
-            <i class="fa-solid fa-star" style="color: #fbbf24;"></i> 
-            4.9 (120)
-        </div>
-      </div>
     </div>
+
 
     <div class="price-highlight">
       <span><?= number_format($service->price, 2) ?>€</span>
