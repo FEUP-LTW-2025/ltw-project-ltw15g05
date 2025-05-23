@@ -60,25 +60,39 @@ function drawAdminPanel(array $users) { ?>
                                     <a href="../pages/profile.php?id=<?= $user['id'] ?>" class="btn btn-sm" title="View Profile">
                                         <i class="fas fa-eye"></i> View
                                     </a>
-                                    
-                                    <!-- Admin role actions -->
-                                    <?php if (in_array('admin', $user['roles'])): ?>
-                                        <?php if ($_SESSION['user_id'] != $user['id']): ?>
-                                        <a href="admin.php?action=remove_admin&user_id=<?= $user['id'] ?>" 
-                                           class="btn btn-sm btn-danger" 
-                                           title="Remove Admin Role"
-                                           onclick="return confirm('Are you sure you want to remove the admin role from this user?');">
-                                            <i class="fas fa-user-slash"></i> Remove Admin
-                                        </a>
+                                      <!-- Admin role actions -->                                    <div class="admin-action-column">
+                                        <!-- Admin role actions -->
+                                        <?php if (in_array('admin', $user['roles'])): ?>
+                                            <?php if ($_SESSION['user_id'] != $user['id']): ?>
+                                            <a href="admin.php?action=remove_admin&user_id=<?= $user['id'] ?>" 
+                                            class="btn btn-sm btn-danger" 
+                                            title="Remove Admin Role"
+                                            onclick="return confirm('Are you sure you want to remove the admin role from this user?');">
+                                                <i class="fas fa-user-slash"></i> Remove Admin
+                                            </a>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <a href="admin.php?action=promote_to_admin&user_id=<?= $user['id'] ?>" 
+                                            class="btn btn-sm btn-primary" 
+                                            title="Promote to Admin"
+                                            onclick="return confirm('Are you sure you want to promote this user to admin? This will give them full access to the admin panel.');">
+                                                <i class="fas fa-user-shield"></i> Make Admin
+                                            </a>
                                         <?php endif; ?>
-                                    <?php else: ?>
-                                        <a href="admin.php?action=promote_to_admin&user_id=<?= $user['id'] ?>" 
-                                           class="btn btn-sm btn-primary" 
-                                           title="Promote to Admin"
-                                           onclick="return confirm('Are you sure you want to promote this user to admin? This will give them full access to the admin panel.');">
-                                            <i class="fas fa-user-shield"></i> Make Admin
-                                        </a>
-                                    <?php endif; ?>
+                                          <!-- Delete user action - don't show for the current admin -->
+                                        <?php if ($_SESSION['user_id'] != $user['id']): ?>
+                                            <form action="../actions/action_delete_user.php" method="get" style="width: 100%;">
+                                                <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+                                                <button type="submit" 
+                                                class="btn btn-sm btn-danger delete-user-btn" 
+                                                title="Delete User"
+                                                style="width: 100%;"
+                                                onclick="return confirm('WARNING: This will permanently delete this user and ALL their data including services, transactions, and messages. This action cannot be undone. Are you sure?');">
+                                                    <i class="fas fa-trash"></i> Delete User
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

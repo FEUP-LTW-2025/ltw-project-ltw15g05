@@ -113,6 +113,12 @@
     color: white;
 }
 
+/* Special styling for the delete user button */
+.delete-user-btn {
+    background-color: #b91c1c !important; /* Darker red */
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
 .btn-success {
     background-color: var(--secondary);
     color: white;

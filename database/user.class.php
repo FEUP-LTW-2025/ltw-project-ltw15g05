@@ -278,6 +278,59 @@ class User {
         }
     }
     
+    /**
+     * Delete a user and all their associated data (services, transactions, etc.)
+     * @param int $userId The ID of the user to delete
+     * @return bool True if successful
+     * @throws Exception If there is a database error
+     */
+    public static function deleteUser(int $userId) {
+        $db = Database::getInstance();
+        
+        try {
+            // Start transaction to ensure all related data is deleted
+            $db->beginTransaction();
+            
+            // First, delete user's roles
+            $stmt = $db->prepare('DELETE FROM user_roles WHERE user_id = ?');
+            $stmt->execute([$userId]);
+            
+            // Delete user's services (if the user is a freelancer)
+            $stmt = $db->prepare('DELETE FROM services WHERE freelancer_id = ?');
+            $stmt->execute([$userId]);
+            
+            // Delete user's transactions as a client
+            $stmt = $db->prepare('DELETE FROM transactions WHERE client_id = ?');
+            $stmt->execute([$userId]);
+            
+            // Delete user's transactions as a freelancer
+            $stmt = $db->prepare('DELETE FROM transactions WHERE freelancer_id = ?');
+            $stmt->execute([$userId]);
+            
+            // Delete user's messages (if there's a messages table)
+            try {
+                $stmt = $db->prepare('DELETE FROM messages WHERE sender_id = ? OR receiver_id = ?');
+                $stmt->execute([$userId, $userId]);
+            } catch (PDOException $e) {
+                // Ignore error if messages table doesn't exist
+            }
+            
+            // Finally, delete the user
+            $stmt = $db->prepare('DELETE FROM users WHERE id = ?');
+            $stmt->execute([$userId]);
+            
+            // Commit the transaction
+            $db->commit();
+            
+            return true;
+            
+        } catch (PDOException $e) {
+            // Roll back the transaction if something failed
+            $db->rollBack();
+            throw new Exception('Error deleting user: ' . $e->getMessage());
+        }
+    }
+    
     public static function getUsersWithRole($roleName) {
         $db = Database::getInstance();
         

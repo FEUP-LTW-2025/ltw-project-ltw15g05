@@ -56,10 +56,30 @@ if (isset($_GET['action']) && isset($_GET['user_id'])) {
     exit();
 }
 
-// Function to log admin actions
+// Function to log admin actions - made globally accessible
 function logAdminAction($adminId, $action, $targetUserId = null) {
     try {
         $db = Database::getInstance();
+        
+        // Check if admin_actions table exists, create it if it doesn't
+        $stmt = $db->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='admin_actions'");
+        $stmt->execute();
+        $tableExists = $stmt->fetchColumn();
+        
+        if (!$tableExists) {
+            // Create the admin_actions table
+            $db->exec("
+                CREATE TABLE admin_actions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    admin_id INTEGER NOT NULL,
+                    action TEXT NOT NULL,
+                    target_user_id INTEGER,
+                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (admin_id) REFERENCES users(id)
+                )
+            ");
+        }
+        
         $stmt = $db->prepare('INSERT INTO admin_actions (admin_id, action, target_user_id) VALUES (?, ?, ?)');
         $stmt->execute([$adminId, $action, $targetUserId]);
         return true;

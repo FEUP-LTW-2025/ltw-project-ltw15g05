@@ -1,0 +1,19 @@
+/* Admin panel specific styles */
+.admin-action-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+/* Override the existing flex layout for the actions cell */
+.admin-table .actions {
+    display: block;
+    min-width: 160px; /* Ensure enough space for buttons */
+}
+
+.admin-action-column a {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5px; /* Additional spacing between buttons */
+}
