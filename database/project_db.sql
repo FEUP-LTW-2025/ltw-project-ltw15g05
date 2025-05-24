@@ -1,3 +1,17 @@
+DROP TABLE IF EXISTS admin_actions;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS booking_requests;
+DROP TABLE IF EXISTS portfolio;
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS favorites;
+DROP TABLE IF EXISTS cart;
+DROP TABLE IF EXISTS services;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
@@ -73,19 +87,6 @@ CREATE TABLE transactions (
     FOREIGN KEY (freelancer_id) REFERENCES users(id)
 );
 
-CREATE TABLE reviews (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    transaction_id INTEGER NOT NULL,
-    client_id INTEGER NOT NULL,
-    freelancer_id INTEGER NOT NULL,
-    rating INTEGER CHECK(rating BETWEEN 1 AND 5) NOT NULL,
-    comment TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (transaction_id) REFERENCES transactions(id),
-    FOREIGN KEY (client_id) REFERENCES users(id),
-    FOREIGN KEY (freelancer_id) REFERENCES users(id)
-);
-
 CREATE TABLE messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     sender_id INTEGER NOT NULL,
@@ -128,6 +129,18 @@ CREATE TABLE booking_requests (
     FOREIGN KEY (freelancer_id) REFERENCES users(id)
 );
 
+CREATE TABLE reviews (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_id INTEGER NOT NULL,
+    freelancer_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    rating INTEGER CHECK(rating BETWEEN 1 AND 5) NOT NULL,
+    comment TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (client_id) REFERENCES users(id),
+    FOREIGN KEY (freelancer_id) REFERENCES users(id),
+    FOREIGN KEY (service_id) REFERENCES services(id)
+);
 
 
 

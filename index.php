@@ -12,7 +12,7 @@ if ($uri_path == '/' || $uri_path == '/index.php') {
     $session = Session::getInstance();
     $userData = $session->getUser();
 
-    if ($userData) {
+    if ($userData !== null) { // Check if user data exists
         header('Location: pages/main.php');
         exit();
     }

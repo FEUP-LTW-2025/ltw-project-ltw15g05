@@ -44,7 +44,6 @@ if (!$userData) {
     exit();
 }
 
-
 // For AJAX requests return only the service list HTML
 if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     require_once(__DIR__ . '/../templates/main.tpl.php');

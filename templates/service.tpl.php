@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 require_once(__DIR__ . '/../database/service.class.php');
+require_once(__DIR__ . '/../database/review.class.php');
 require_once(__DIR__ . '/../database/user.class.php');
+
+
 ?>
 
 <?php function drawNewServiceForm(array $categories, array $messages = []) { ?>
@@ -207,9 +210,17 @@ require_once(__DIR__ . '/../database/user.class.php');
     <section class="service-page">
     <h1><?= htmlspecialchars($service->title) ?></h1>
 
-    <div class="service-details">      
-      <img src="/images/services/<?= $service->id ?>.jpg" alt="Imagem do serviço <?= htmlspecialchars($service->title) ?>" class="service-image">
-      
+    <div class="service-details">  
+        <?php
+            $servicePath = "/images/services/$service->id.jpg";
+            $absolutePath = __DIR__ . "/../images/services/$service->id.jpg";
+
+            if (!file_exists($absolutePath)) {
+                $servicePath = "/images/services/default.jpg";
+            }
+        ?>
+        <img src="<?= $servicePath ?>" alt="Imagem do serviço <?= htmlspecialchars($service->title) ?>" class="service-image">
+
       <div class="service-meta">
         <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($service->description)) ?></p>
         <p><strong>Tempo de entrega:</strong> <?= $service->delivery_time ?> dias</p>
@@ -241,10 +252,6 @@ require_once(__DIR__ . '/../database/user.class.php');
                     Messages
                 </a>
             </div>
-            <div class="freelancer-rating">
-                <i class="fa-solid fa-star" style="color: #fbbf24;"></i> 
-                4.9 (120)
-            </div>
         </div>
     </div>
 
@@ -254,16 +261,63 @@ require_once(__DIR__ . '/../database/user.class.php');
     </div>
 
     <div class="buy-buttons">
-        <form action="../actions/action_add_to_cart.php" method="post" style="display: inline;">
+        <form action="../actions/action_add_to_cart.php" method="post" class="buy-now-form">
             <input type="hidden" name="service_id" value="<?= $service->id ?>">
-            <button type="submit" class="buy-now">Comprar</button>
-        </form>
-
-        <form action="../actions/action_add_to_favorites.php" method="post" style="display: inline;">
-            <input type="hidden" name="service_id" value="<?= $service->id ?>">
-            <button type="submit" class="save-later">Guardar para mais tarde</button>
+            <button type="submit" class="btn-buy-now">Comprar</button>
         </form>
     </div>
+
+    <div class="review-form">
+        <h2>Leave a Review</h2>
+        <form action="../actions/action_add_review.php" method="post">
+            <input type="hidden" name="service_id" value="<?= $service->id ?>">
+
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required><label for="star5">&#9733;</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4">&#9733;</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3">&#9733;</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2">&#9733;</label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1">&#9733;</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Comment:</label>
+                <textarea id="comment" name="comment" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+    <div class="reviews-section">
+        <h2>Reviews</h2>
+        <?php
+        $reviews = Review::getReviewsByService($service->id);
+        if (!empty($reviews)): ?>
+            <?php foreach ($reviews as $review): ?>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div>
+                            <strong class="review-author"><?= htmlspecialchars($review['client_name']) ?></strong>
+                            <span class="review-date">• <?= date('d m Y, H:i', strtotime($review['created_at'])) ?></span>
+                        </div>
+                        <div class="review-rating">
+                            <?php for ($i = 0; $i < 5; $i++): ?>
+                            <span class="star <?= $i < $review['rating'] ? 'filled' : '' ?>">&#9733;</span>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    <p class="review-comment"><?= nl2br(htmlspecialchars($review['comment'])) ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="no-reviews">No reviews yet. Be the first to leave one!</p>
+        <?php endif; ?>
+        </div>
+    </div>
+
 
   </section>
 <?php } ?>
