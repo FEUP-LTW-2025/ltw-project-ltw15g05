@@ -95,6 +95,22 @@ class Service {
         return $services;
     }
 
+    public static function getByFreelancerId(int $freelancerId): array {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('
+            SELECT 
+                services.id,
+                services.title,
+                services.price,
+                categories.name AS category_name
+            FROM services
+            JOIN categories ON services.category_id = categories.id
+            WHERE services.freelancer_id = ?
+        ');
+        $stmt->execute([$freelancerId]);
+        return $stmt->fetchAll();
+    }
+
 
         
     public static function create(
@@ -239,6 +255,33 @@ class Service {
         }
         
         return $services;
+    }
+
+
+    public static function getServiceById(int $id): ?array {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('
+            SELECT 
+                services.id, 
+                services.title, 
+                services.description, 
+                services.price, 
+                services.delivery_time, 
+                services.photo_style, 
+                services.equipment_provided, 
+                services.location, 
+                services.created_at,
+                categories.name AS category_name,
+                users.username AS freelancer_name
+            FROM services
+            JOIN categories ON services.category_id = categories.id
+            JOIN users ON services.freelancer_id = users.id
+            WHERE services.id = ?
+        ');
+        $stmt->execute([$id]);
+        $service = $stmt->fetch();
+    
+        return $service ?: null;
     }
     
     public static function getServicesByDeliveryTime(int $max_days): array {

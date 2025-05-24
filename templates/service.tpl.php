@@ -238,7 +238,7 @@ require_once(__DIR__ . '/../database/user.class.php');
     <div class="price-highlight">
       <span><?= number_format($service->price, 2) ?>€</span>
     </div>    <div class="buy-buttons">
-        <form action="../actions/action_add_to_cart.php" method="post" style="display: inline;">
+        <form action="../pages/checkout.php" method="get" style="display: inline;">
             <input type="hidden" name="service_id" value="<?= $service->id ?>">
             <button type="submit" class="buy-now">Buy</button>
         </form>

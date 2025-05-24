@@ -37,6 +37,15 @@ CREATE TABLE services (
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+CREATE TABLE purchases (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    purchase_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    payment_method TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (service_id) REFERENCES services(id)
+);
 
 CREATE TABLE cart (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

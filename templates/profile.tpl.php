@@ -121,68 +121,53 @@ function formatMessageTime(string $timestamp): string {
             </div>
             
             <div class="tab-content active" id="services">
-                <?php if ($isFreelancer && !empty($services)): ?>
+                <?php
+                require_once(__DIR__ . '/../database/service.class.php');
+                $services = Service::getByFreelancerId($userData['id']);
+                ?>
+
+                <link rel="stylesheet" href="../css/profile.css">
+
+                <?php if (!empty($services)): ?>
                     <div class="service-grid">
                         <?php foreach ($services as $service): ?>
                             <div class="service-card">
-                                <div class="service-image">
-                                    <?php if (!empty($service['primary_image'])): ?>
-                                        <img src="<?= htmlspecialchars($service['primary_image']) ?>" alt="<?= htmlspecialchars($service['title']) ?>">
-                                    <?php else: ?>
-                                        <div class="placeholder-image">No Image</div>
-                                    <?php endif; ?>
-                                </div>
                                 <div class="service-info">
                                     <h3><?= htmlspecialchars($service['title']) ?></h3>
                                     <p class="service-category"><?= htmlspecialchars($service['category_name']) ?></p>
-                                    <p class="service-price">$<?= number_format($service['price'], 2) ?></p>
+                                    <p class="service-price"><?= number_format($service['price'], 2) ?>€</p>
                                 </div>
                                 <div class="service-actions">
-                                    <a href="edit_service.php?id=<?= $service['id'] ?>" class="btn btn-sm btn-outline">Edit</a>
                                     <a href="service.php?id=<?= $service['id'] ?>" class="btn btn-sm">View</a>
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
-                <?php elseif ($isFreelancer): ?>
+                <?php else: ?>
                     <div class="empty-state">
                         <h3>No services yet</h3>
                         <p>Start offering your skills by creating your first service</p>
                         <a href="new_service.php" class="btn btn-primary">Create Service</a>
                     </div>
-                <?php else: ?>
-                    <div class="empty-state">
-                        <h3>Become a freelancer</h3>
-                        <p>Start offering your skills on our platform</p>
-                        <form action="../actions/action_become_freelancer.php" method="post">
-                            <button type="submit" class="btn btn-primary">Become a Freelancer</button>
-                        </form>
-                    </div>
                 <?php endif; ?>
             </div>
             
             <div class="tab-content" id="orders">
-                <?php if (!empty($clientTransactions)): ?>
+                <?php
+                require_once(__DIR__ . '/../database/purchase.class.php');
+                $purchases = Purchase::getUserPurchases($userData['id']);
+                ?>
+
+                <?php if (!empty($purchases)): ?>
                     <div class="orders-list">
-                        <?php foreach ($clientTransactions as $transaction): ?>
+                        <?php foreach ($purchases as $purchase): ?>
                             <div class="order-item">
-                                <div class="order-image">
-                                    <?php if (!empty($transaction['service_image'])): ?>
-                                        <img src="<?= htmlspecialchars($transaction['service_image']) ?>" alt="Service">
-                                    <?php else: ?>
-                                        <div class="placeholder-image">No Image</div>
-                                    <?php endif; ?>
-                                </div>
                                 <div class="order-info">
-                                    <h3><?= htmlspecialchars($transaction['service_title']) ?></h3>
-                                    <p>Freelancer: <?= htmlspecialchars($transaction['freelancer_name']) ?></p>
-                                    <p class="order-date">Ordered: <?= date('M j, Y', strtotime($transaction['created_at'])) ?></p>
-                                    <div class="order-status status-<?= strtolower($transaction['status']) ?>">
-                                        <?= ucfirst($transaction['status']) ?>
-                                    </div>
-                                </div>
-                                <div class="order-actions">
-                                    <a href="order_details.php?id=<?= $transaction['id'] ?>" class="btn btn-sm">View Details</a>
+                                    <h3><?= htmlspecialchars($purchase['title']) ?></h3>
+                                    <p><strong>Price:</strong> <?= number_format($purchase['price'], 2) ?>€</p>
+                                    <p><strong>Description:</strong> <?= htmlspecialchars($purchase['description']) ?></p>
+                                    <p><strong>Purchase Date:</strong> <?= date('d/m/Y', strtotime($purchase['purchase_date'])) ?></p>
+                                    <p><strong>Payment Method:</strong> <?= htmlspecialchars($purchase['payment_method']) ?></p>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -195,7 +180,7 @@ function formatMessageTime(string $timestamp): string {
                     </div>
                 <?php endif; ?>
             </div>
-            
+
             <div class="tab-content" id="messages">
                 <?php if (!empty($conversations)): ?>
                     <div class="messages-list">
@@ -290,4 +275,51 @@ function formatMessageTime(string $timestamp): string {
             <?php endif; ?>
         </div>
     </section>
+<?php } ?>
+
+
+<?php function drawProfilePage(array $user, array $messages = []) { ?>
+    <div class="container">
+        <section class="profile-section">
+            <h1>Welcome, <?= htmlspecialchars($user['username']) ?></h1>
+
+            <?php if (!empty($messages)): ?>
+                <?php foreach ($messages as $message): ?>
+                    <div class="alert alert-<?= $message['type'] === 'error' ? 'danger' : $message['type'] ?>">
+                        <?= $message['content'] ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+            <!-- Informações do usuário -->
+            <div class="user-info">
+                <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
+                <p><strong>Member since:</strong> <?= date('d/m/Y', strtotime($user['created_at'])) ?></p>
+            </div>
+
+            <!-- Adicione aqui a seção de compras -->
+            <?php
+            require_once(__DIR__ . '/../database/purchase.class.php');
+
+            $purchases = Purchase::getUserPurchases($user['id']);
+            ?>
+
+            <div class="purchases-section">
+                <h2>Your Purchases</h2>
+                <?php if (!empty($purchases)): ?>
+                    <ul class="purchase-list">
+                        <?php foreach ($purchases as $purchase): ?>
+                            <li>
+                                <h3><?= htmlspecialchars($purchase['title']) ?></h3>
+                                <p><strong>Price:</strong> <?= number_format($purchase['price'], 2) ?>€</p>
+                                <p><strong>Description:</strong> <?= htmlspecialchars($purchase['description']) ?></p>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p>You have no purchases yet.</p>
+                <?php endif; ?>
+            </div>
+        </section>
+    </div>
 <?php } ?>
