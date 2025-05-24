@@ -14,14 +14,10 @@ if (!$userData) {
     header('Location: form_login.php');
     exit();
 }
+
 $currentUserId = $_SESSION['user_id'];
 $chatWithId = $_GET['chat_with'] ?? null;
 $recentChats = Messages::getRecentChats($currentUserId);
-
-if (!$chatWithId) {
-    die('Select a user to chat with.');
-}
-
 $messages = Messages::getMessagesBetween($currentUserId, $chatWithId);
 
 drawHeader(true);

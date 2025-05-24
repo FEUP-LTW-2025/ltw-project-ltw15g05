@@ -81,16 +81,16 @@ function drawAdminPanel(array $users) { ?>
                                         <?php endif; ?>
                                           <!-- Delete user action - don't show for the current admin -->
                                         <?php if ($_SESSION['user_id'] != $user['id']): ?>
-                                            <form action="../actions/action_delete_user.php" method="get" style="width: 100%;">
+                                            <a action="../actions/action_delete_user.php" method="get" style="width: 100%;">
                                                 <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                                 <button type="submit" 
                                                 class="btn btn-sm btn-danger delete-user-btn" 
                                                 title="Delete User"
                                                 style="width: 100%;"
                                                 onclick="return confirm('WARNING: This will permanently delete this user and ALL their data including services, transactions, and messages. This action cannot be undone. Are you sure?');">
-                                                    <i class="fas fa-trash"></i> Delete User
+                                                <i class="fas fa-trash">Delete User</i> 
                                                 </button>
-                                            </form>
+                                        </a>
                                         <?php endif; ?>
                                     </div>
                                 </td>
@@ -158,7 +158,7 @@ function drawAdminPanel(array $users) { ?>
                                     <a href="../actions/action_delete_category.php?id=<?= $category['id'] ?>" 
                                        class="btn btn-sm btn-danger"
                                        onclick="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">
-                                        <i class="fas fa-trash"></i> Delete
+                                        <i class="fas fa-trash">Delete</i> 
                                     </a>
                                 </td>
                             </tr>

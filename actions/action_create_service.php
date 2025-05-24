@@ -52,6 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $location
         );
 
+        $target_dir = __DIR__ . '/../images/services/';
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0755, true);
+        }
+
+        if (isset($_FILES['image']) && is_uploaded_file($_FILES['image']['tmp_name'])) {
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $imageFileType = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $target_file = $target_dir . $service_id . '.jpg';
+            move_uploaded_file($tmp_name, $target_file);
+        }
+
         // Success
         $session->addMessage('success', 'Service created successfully');
         header('Location: ../pages/main.php'); // Redirect to main page

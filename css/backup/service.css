@@ -128,14 +128,6 @@ body {
   background-color: #2980b9;
 }
 
-.freelancer-rating {
-  font-size: 0.95rem;
-  color: #374151;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
 .user-image {
   width: 70px;
   height: 70px;
@@ -154,43 +146,346 @@ body {
 }
 
 
+/* Buy Buttons Section */
 .buy-buttons {
-  margin-top: 2rem;
-  display: flex;
-  gap: 1rem;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
-.buy-now,
-.save-later {
-  flex: 1;
-  padding: 1rem;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border: none;
+/* General form styling */
+form {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific styling for buy-now and save-later forms */
+.buy-now-form,
+.save-later-form {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.buy-now-form button,
+.save-later-form button {
+    all: unset; /* Reset all inherited styles */
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Comprar Button Styling */
+.btn-buy-now {
+    background-color: #10b981; /* Green */
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-buy-now:hover {
+    background-color: #059669; /* Darker Green */
+}
+
+/* Save Later Button Styling */
+.btn-save-later {
+    background-color: #f3f4f6;
+    color: #374151;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-save-later:hover {
+    background-color: #e5e7eb;
+}
+
+/* Reviews Section Styling */
+.reviews-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.reviews-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+}
+
+.review {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.review:last-child {
+    margin-bottom: 0;
+}
+
+.review p {
+    margin: 0.5rem 0;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.review strong {
+    color: #111827;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.review small {
+    display: block;
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+/* General form styling */
+form {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+form h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+textarea {
+    resize: vertical;
+}
+
+button[type="submit"] {
+  text-align: center;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #10b981;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Review Form Styling */
+.review-form {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.review-form h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+}
+
+.review-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.review-form label {
+    display: block;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.review-form input,
+.review-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #374151;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-form input:focus,
+.review-form textarea:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 5px rgba(124, 58, 237, 0.3);
+    outline: none;
+}
+
+.review-form button[type="submit"] {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #7c3aed; /* Purple */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.review-form button[type="submit"]:hover {
+    background-color: #6d28d9; /* Darker Purple */
+}
+.star-rating {
+  direction: rtl;
+  display: inline-flex;
+  font-size: 2rem;
+  gap: 0.3rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  user-select: none;
 }
 
-.buy-now {
-  background-color: #10b981; /* verde */
-  color: #ffffff;
+.star-rating input {
+  display: none;
 }
 
-.buy-now:hover {
-  background-color: #059669;
+.star-rating label {
+  color: #ccc;
+  transition: transform 0.2s, color 0.2s;
 }
 
-.save-later {
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: gold;
 }
 
-.save-later:hover {
-  background-color: #e5e7eb;
+.star-rating input:checked ~ label {
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+  transform: scale(1.1);
 }
 
+.rating-value {
+  margin-top: 0.3rem;
+  font-weight: bold;
+  color: #333;
+  font-size: 1rem;
+}
+
+
+.star {
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.numeric-rating {
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: 4px;
+}
+.review {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.review p,
+.review-comment {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-line; /* or normal */
+}
+.review-comment {
+  font-size: 1rem;
+  color: #333;
+  margin: 0.5rem 0;
+  white-space: pre-line;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: #888;
+  text-align: right;
+}
+
+.no-reviews {
+  color: #777;
+  font-style: italic;
+}
 
 @media screen and (max-width: 768px) {
   .service-details {
