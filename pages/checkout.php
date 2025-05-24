@@ -35,7 +35,7 @@ drawHeader(true);
     <h1>Finalize Your Purchase</h1>
     <div class="service-summary">
         <h2><?= htmlspecialchars($service['title']) ?></h2>
-        <p><strong>Price:</strong> <?= number_format($service['price'], 2) ?>€</p>
+        <p><strong>Price:</strong> <?= number_format(floatval($service['price']), 2) ?>€</p>
         <p><strong>Description:</strong> <?= htmlspecialchars($service['description']) ?></p>
         <p><strong>Delivery Time:</strong> <?= $service['delivery_time'] ?> days</p>
         <p><strong>Freelancer:</strong> <?= htmlspecialchars($service['freelancer_name']) ?></p>
@@ -44,7 +44,7 @@ drawHeader(true);
     </div>
 
     <h2>Payment Options</h2>
-    <<form action="../actions/action_finalize_purchase.php" method="post">
+    <form action="../actions/action_finalize_purchase.php" method="post">
         <input type="hidden" name="service_id" value="<?= $serviceId ?>">
 
         <div class="payment-methods">

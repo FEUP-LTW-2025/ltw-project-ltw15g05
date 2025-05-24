@@ -209,8 +209,8 @@ require_once(__DIR__ . '/../database/user.class.php');
       <img src="/images/services/<?= $service->id ?>.jpg" alt="Imagem do serviço <?= htmlspecialchars($service->title) ?>" class="service-image">
       
       <div class="service-meta">
-        <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($service->description)) ?></p>
-        <p><strong>Tempo de entrega:</strong> <?= $service->delivery_time ?> dias</p>        <p><strong>Photo Style:</strong> <?= htmlspecialchars($service->photo_style) ?></p>
+        <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($service->description)) ?></p>
+        <p><strong>Duration:</strong> <?= $service->delivery_time ?> days</p>        <p><strong>Photo Style:</strong> <?= htmlspecialchars($service->photo_style) ?></p>
         <p><strong>Equipment Provided:</strong> <?= $service->equipment_provided ? 'Yes' : 'No' ?></p>
         <?php if (!empty($service->location)) : ?>
           <p><strong>Location:</strong> <?= htmlspecialchars($service->location) ?></p>

@@ -123,7 +123,7 @@ function formatMessageTime(string $timestamp): string {
             <div class="tab-content active" id="services">
                 <?php
                 require_once(__DIR__ . '/../database/service.class.php');
-                $services = Service::getByFreelancerId($userData['id']);
+                $services = Service::getByFreelancerId((int)$userData['id']);
                 ?>
 
                 <link rel="stylesheet" href="../css/profile.css">
@@ -135,7 +135,7 @@ function formatMessageTime(string $timestamp): string {
                                 <div class="service-info">
                                     <h3><?= htmlspecialchars($service['title']) ?></h3>
                                     <p class="service-category"><?= htmlspecialchars($service['category_name']) ?></p>
-                                    <p class="service-price"><?= number_format($service['price'], 2) ?>€</p>
+                                    <p class="service-price"><?= number_format(floatval($service['price']), 2) ?>€</p>
                                 </div>
                                 <div class="service-actions">
                                     <a href="service.php?id=<?= $service['id'] ?>" class="btn btn-sm">View</a>
@@ -155,28 +155,49 @@ function formatMessageTime(string $timestamp): string {
             <div class="tab-content" id="orders">
                 <?php
                 require_once(__DIR__ . '/../database/purchase.class.php');
-                $purchases = Purchase::getUserPurchases($userData['id']);
+                // Use both purchases and transactions
+                $purchases = Purchase::getUserPurchases((int)$userData['id']);
+                $transactions = $clientTransactions ?? [];
                 ?>
 
-                <?php if (!empty($purchases)): ?>
+                <?php if (!empty($purchases) || !empty($transactions)): ?>
                     <div class="orders-list">
-                        <?php foreach ($purchases as $purchase): ?>
-                            <div class="order-item">
-                                <div class="order-info">
-                                    <h3><?= htmlspecialchars($purchase['title']) ?></h3>
-                                    <p><strong>Price:</strong> <?= number_format($purchase['price'], 2) ?>€</p>
-                                    <p><strong>Description:</strong> <?= htmlspecialchars($purchase['description']) ?></p>
-                                    <p><strong>Purchase Date:</strong> <?= date('d/m/Y', strtotime($purchase['purchase_date'])) ?></p>
-                                    <p><strong>Payment Method:</strong> <?= htmlspecialchars($purchase['payment_method']) ?></p>
+                        <?php if (!empty($purchases)): ?>
+                            <?php foreach ($purchases as $purchase): ?>
+                                <div class="order-item">
+                                    <div class="order-info">
+                                        <h3><?= htmlspecialchars($purchase['title']) ?></h3>
+                                        <p><strong>Price:</strong> <?= number_format(floatval($purchase['price']), 2) ?>€</p>
+                                        <p><strong>Description:</strong> <?= htmlspecialchars($purchase['description']) ?></p>
+                                        <p><strong>Purchase Date:</strong> <?= date('d/m/Y', strtotime($purchase['purchase_date'])) ?></p>
+                                        <p><strong>Payment Method:</strong> <?= htmlspecialchars(str_replace('_', ' ', ucfirst($purchase['payment_method']))) ?></p>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($transactions)): ?>
+                            <?php foreach ($transactions as $transaction): ?>
+                                <div class="order-item">
+                                    <div class="order-info">
+                                        <h3><?= htmlspecialchars($transaction['service_title']) ?></h3>
+                                        <p><strong>Price:</strong> <?= number_format(floatval($transaction['payment_amount']), 2) ?>€</p>
+                                        <p><strong>Status:</strong> <?= htmlspecialchars(str_replace('_', ' ', ucfirst($transaction['status']))) ?></p>
+                                        <p><strong>Freelancer:</strong> <?= htmlspecialchars($transaction['freelancer_name'] ?? 'Unknown') ?></p>
+                                        <p><strong>Order Date:</strong> <?= date('d/m/Y', strtotime($transaction['created_at'])) ?></p>
+                                        <?php if (!empty($transaction['completed_at'])): ?>
+                                            <p><strong>Completed Date:</strong> <?= date('d/m/Y', strtotime($transaction['completed_at'])) ?></p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <div class="empty-state">
                         <h3>No orders yet</h3>
                         <p>Browse our services and make your first order</p>
-                        <a href="services.php" class="btn btn-primary">Browse Services</a>
+                        <a href="../index.php" class="btn btn-primary">Browse Services</a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -309,10 +330,12 @@ function formatMessageTime(string $timestamp): string {
                 <?php if (!empty($purchases)): ?>
                     <ul class="purchase-list">
                         <?php foreach ($purchases as $purchase): ?>
-                            <li>
+                            <li class="purchase-item">
                                 <h3><?= htmlspecialchars($purchase['title']) ?></h3>
                                 <p><strong>Price:</strong> <?= number_format($purchase['price'], 2) ?>€</p>
                                 <p><strong>Description:</strong> <?= htmlspecialchars($purchase['description']) ?></p>
+                                <p><strong>Purchase Date:</strong> <?= date('d/m/Y', strtotime($purchase['purchase_date'])) ?></p>
+                                <p><strong>Payment Method:</strong> <?= htmlspecialchars(str_replace('_', ' ', ucfirst($purchase['payment_method']))) ?></p>
                             </li>
                         <?php endforeach; ?>
                     </ul>

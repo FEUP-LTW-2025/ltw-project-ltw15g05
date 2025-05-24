@@ -58,7 +58,7 @@ class Transaction {
             $payment_amount, $custom_requirements
         ]);
         
-        return $db->lastInsertId();
+        return (int)$db->lastInsertId();
     }
     
     public static function getById(int $id): ?array {

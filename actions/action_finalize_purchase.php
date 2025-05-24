@@ -3,6 +3,16 @@ declare(strict_types=1);
 
 require_once(__DIR__ . '/../includes/session.php');
 require_once(__DIR__ . '/../database/purchase.class.php');
+require_once(__DIR__ . '/../database/service.class.php');
+require_once(__DIR__ . '/../database/transaction.class.php');
+require_once(__DIR__ . '/../database/init_database.php');
+
+// Ensure database tables are up-to-date silently (without output)
+ob_start();
+$db = Database::getInstance();
+ensure_purchases_table_exists($db);
+ensure_transactions_table_structure($db);
+ob_end_clean();
 
 $session = Session::getInstance();
 $user = $session->getUser();
@@ -25,14 +35,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // Get service details to retrieve freelancer_id and price
+        $service = Service::getService((int)$serviceId);
+        if (!$service) {
+            throw new Exception('Service not found.');
+        }
+
         // Registrar a compra no banco de dados
         if (!Purchase::createPurchase((int)$user['id'], (int)$serviceId, $paymentMethod)) {
             throw new Exception('Failed to insert purchase into database.');
         }
+
+        // Create a transaction record for the client's orders
+        $transactionId = Transaction::create(
+            (int)$serviceId,
+            (int)$user['id'],
+            (int)$service->freelancer_id,
+            (float)$service->price,
+            '' // No custom requirements for now
+        );
+
+        if (!$transactionId) {
+            throw new Exception('Failed to create transaction record.');
+        }
+
         $session->addMessage('success', 'Purchase completed successfully.');
     } catch (Exception $e) {
         error_log('Error finalizing purchase: ' . $e->getMessage());
-        $session->addMessage('error', 'Error finalizing purchase.');
+        $session->addMessage('error', 'Error finalizing purchase: ' . $e->getMessage());
     }
 
     header('Location: ../pages/profile.php');

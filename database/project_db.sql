@@ -74,9 +74,11 @@ CREATE TABLE transactions (
     service_id INTEGER NOT NULL,
     client_id INTEGER NOT NULL,
     freelancer_id INTEGER NOT NULL,
-    status TEXT CHECK(status IN ('pending', 'completed', 'canceled')) NOT NULL,
+    status TEXT CHECK(status IN ('pending', 'in_progress', 'completed', 'canceled')) NOT NULL DEFAULT 'pending',
     payment_amount REAL NOT NULL,
+    custom_requirements TEXT DEFAULT '',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    completed_at DATETIME DEFAULT NULL,
     FOREIGN KEY (service_id) REFERENCES services(id),
     FOREIGN KEY (client_id) REFERENCES users(id),
     FOREIGN KEY (freelancer_id) REFERENCES users(id)

@@ -40,7 +40,7 @@ if (!$userData) {
 // Get any success or error messages from query parameters
 $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success']) : null;
 $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
-/*
+
 // Load user's services if they are a freelancer
 $services = [];
 $clientTransactions = [];
@@ -68,7 +68,6 @@ if (in_array('freelancer', $userData['roles'])) {
 
 // Load client transactions
 $clientTransactions = Transaction::getByClientId((int)$userData['id']);
-*/
 // Load conversations
 // This would be implemented in a Message class
 // $conversations = Message::getUserConversations($userData['id']);

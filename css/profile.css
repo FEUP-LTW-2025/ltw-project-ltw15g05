@@ -50,3 +50,74 @@
     font-size: 14px;
     border-radius: 5px;
 }
+
+/* Orders list styling */
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.order-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.order-info h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.order-info p {
+    margin: 8px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+/* Purchases section styling */
+.purchases-section {
+    margin-top: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.purchases-section h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.purchase-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.purchase-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.purchase-item h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.purchase-item p {
+    margin: 5px 0;
+}
