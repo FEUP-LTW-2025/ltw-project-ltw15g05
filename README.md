@@ -1,8 +1,8 @@
 # ltw15g05
 
-Tiago Arteiro - up202307815
-Tiago Correia - up202306129
-Luís Ferreira - up202208429
+- Tiago Arteiro - up202307815
+- Tiago Correia - up202306129
+- Luís Ferreira - up202208429
 
 ## Features
 
