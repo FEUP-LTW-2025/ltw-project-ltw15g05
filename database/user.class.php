@@ -2,7 +2,6 @@
 declare(strict_types=1);
 require_once(__DIR__ . '/../includes/database.php');
 
-// Add str_ends_with polyfill for PHP versions below 8.0
 if (!function_exists('str_ends_with')) {
     function str_ends_with($haystack, $needle) {
         $length = strlen($needle);
@@ -18,7 +17,6 @@ class User {
     public array $roles;
 
     public function __construct(int $id, string $name, string $username, ?string $email = null, array $roles = []) {
-
         $this->id = $id;
         $this->name = $name;
         $this->username = $username;
@@ -28,138 +26,107 @@ class User {
 
     public static function create($name, $username, $password, $email = '') {
         $db = Database::getInstance();
-        
-        try {
-            // First, ensure the users table exists
-            $stmt = $db->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
-            $stmt->execute();
-            $tableExists = $stmt->fetchColumn();
-            
-            if (!$tableExists) {
-                // Create the users table with the email column
-                $db->exec("
-                    CREATE TABLE users (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        username TEXT UNIQUE NOT NULL,
-                        password TEXT NOT NULL,
-                        name TEXT NOT NULL,
-                        email TEXT UNIQUE,
-                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                    )
-                ");
-            } else {
-                // Check if email column exists
-                $result = $db->query("PRAGMA table_info(users)");
-                $emailColumnExists = false;
-                
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    if ($row['name'] === 'email') {
-                        $emailColumnExists = true;
-                        break;
-                    }
-                }
-                
-                // Add the column if it doesn't exist - without UNIQUE constraint
-                if (!$emailColumnExists) {
-                    $db->exec("ALTER TABLE users ADD COLUMN email TEXT");
+
+        $stmt = $db->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
+        $stmt->execute();
+        $tableExists = $stmt->fetchColumn();
+
+        if (!$tableExists) {
+            $db->exec("
+                CREATE TABLE users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT UNIQUE NOT NULL,
+                    password TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    email TEXT UNIQUE,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            ");
+        } else {
+            $result = $db->query("PRAGMA table_info(users)");
+            $emailColumnExists = false;
+
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                if ($row['name'] === 'email') {
+                    $emailColumnExists = true;
+                    break;
                 }
             }
-            
-            // Check if username already exists
-            $stmt = $db->prepare('SELECT id FROM users WHERE username = ?');
-            $stmt->execute([$username]);
-            if ($stmt->fetch()) {
-                throw new Exception('Username already exists');
+
+            if (!$emailColumnExists) {
+                $db->exec("ALTER TABLE users ADD COLUMN email TEXT");
             }
-            
-            // Validate email
-            if (!empty($email)) {
-                // First check if it's a valid email format
-                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new Exception('Please enter a valid email address');
-                }
-                
-                // Check if email ends with a valid domain
-                $valid_domains = ['@gmail.com', '@hotmail.com', '@outlook.com', '@yahoo.com', '@icloud.com', '@protonmail.com', '@mail.com'];
-                $valid_email = false;
-                
-                foreach ($valid_domains as $domain) {
-                    if (str_ends_with(strtolower($email), $domain)) {
-                        $valid_email = true;
-                        break;
-                    }
-                }
-                
-                if (!$valid_email) {
-                    throw new Exception('Please use a valid email domain (gmail.com, hotmail.com, outlook.com, etc)');
-                }
-                
-                // Check if email already exists
-                $stmt = $db->prepare('SELECT id FROM users WHERE email = ?');
-                $stmt->execute([$email]);
-                if ($stmt->fetch()) {
-                    throw new Exception('Email already exists');
-                }
-                
-                $stmt = $db->prepare('INSERT INTO users (name, username, password, email) VALUES (?, ?, ?, ?)');
-                $stmt->execute([$name, $username, password_hash($password, PASSWORD_DEFAULT), $email]);
-            } else {
-                $stmt = $db->prepare('INSERT INTO users (name, username, password) VALUES (?, ?, ?)');
-                $stmt->execute([$name, $username, password_hash($password, PASSWORD_DEFAULT)]);
-            }
-        } catch (PDOException $e) {
-            throw new Exception('Database error: ' . $e->getMessage());
         }
-        
+
+        $stmt = $db->prepare('SELECT id FROM users WHERE username = ?');
+        $stmt->execute([$username]);
+        if ($stmt->fetch()) {
+            throw new Exception('Username already exists');
+        }
+
+        if (!empty($email)) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                throw new Exception('Please enter a valid email address');
+            }
+
+            $valid_domains = ['@gmail.com', '@hotmail.com', '@outlook.com', '@yahoo.com', '@icloud.com', '@protonmail.com', '@mail.com'];
+            $valid_email = false;
+
+            foreach ($valid_domains as $domain) {
+                if (str_ends_with(strtolower($email), $domain)) {
+                    $valid_email = true;
+                    break;
+                }
+            }
+
+            if (!$valid_email) {
+                throw new Exception('Please use a valid email domain (gmail.com, hotmail.com, outlook.com, etc)');
+            }
+
+            $stmt = $db->prepare('SELECT id FROM users WHERE email = ?');
+            $stmt->execute([$email]);
+            if ($stmt->fetch()) {
+                throw new Exception('Email already exists');
+            }
+
+            $stmt = $db->prepare('INSERT INTO users (name, username, password, email) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$name, $username, password_hash($password, PASSWORD_DEFAULT), $email]);
+        } else {
+            $stmt = $db->prepare('INSERT INTO users (name, username, password) VALUES (?, ?, ?)');
+            $stmt->execute([$name, $username, password_hash($password, PASSWORD_DEFAULT)]);
+        }
+
         return $db->lastInsertId();
     }
-    
 
-    public static function get_user_by_username_password($username, $password) {
+    public static function get_user_by_username_password(string $username, string $password): ?array {
         $db = Database::getInstance();
-        
-        // First, get the user by username only
+
         $stmt = $db->prepare('SELECT * FROM users WHERE username = ?');
         $stmt->execute([$username]);
-        $user = $stmt->fetch();
-        
-        if (!$user) {
-            throw new Exception('Invalid username or password.');
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            return $user;
         }
-        
-        // Now verify the password based on the hash format
-        $isPasswordValid = false;
-        
-        // For backward compatibility with sha1 passwords (40 characters)
-        if (strlen($user['password']) === 40) {
-            $isPasswordValid = (sha1($password) === $user['password']);
-        } else {
-            // For newer password_hash() format
-            $isPasswordValid = password_verify($password, $user['password']);
-        }
-        
-        if (!$isPasswordValid) {
-            throw new Exception('Invalid username or password.');
-        }
-        
-        return $user;
+
+        throw new Exception('Invalid username or password');
     }
-    
+
 
     public static function get_user_by_id(int $id){
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT * FROM users WHERE id = ?');
         $stmt->execute([$id]);
         $user = $stmt->fetch();
-        
+
         if ($user) {
-            // Add user roles
             $user['roles'] = self::getUserRoles($id);
         }
-        
+
         return $user;
     }
-    
+
     public static function getUserRoles(int $userId) {
         $db = Database::getInstance();
         $stmt = $db->prepare('
@@ -168,82 +135,68 @@ class User {
             WHERE ur.user_id = ?
         ');
         $stmt->execute([$userId]);
-        
+
         $roles = [];
         while ($role = $stmt->fetchColumn()) {
             $roles[] = $role;
         }
-        
+
         return $roles;
     }
-    
+
     public static function addRole(int $userId, string $roleName) {
         $db = Database::getInstance();
-        
-        try {
-            // First ensure the roles table exists
-            $stmt = $db->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='roles'");
-            $stmt->execute();
-            $tableExists = $stmt->fetchColumn();
-            
-            if (!$tableExists) {
-                // Create the roles table
-                $db->exec("
-                    CREATE TABLE roles (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT UNIQUE NOT NULL CHECK(name IN ('freelancer', 'client', 'admin'))
-                    )
-                ");
-            }
-            
-            // Also check if user_roles table exists
-            $stmt = $db->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='user_roles'");
-            $stmt->execute();
-            $tableExists = $stmt->fetchColumn();
-            
-            if (!$tableExists) {
-                // Create the user_roles table
-                $db->exec("
-                    CREATE TABLE user_roles (
-                        user_id INTEGER NOT NULL,
-                        role_id INTEGER NOT NULL,
-                        PRIMARY KEY (user_id, role_id),
-                        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                        FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
-                    )
-                ");
-            }
-            
-            // First ensure the role exists in the roles table
-            $roleId = self::ensureRoleExists($roleName);
-            
-            // Check if user already has this role
-            $stmt = $db->prepare('SELECT COUNT(*) FROM user_roles WHERE user_id = ? AND role_id = ?');
-            $stmt->execute([$userId, (int)$roleId]);
-            if ($stmt->fetchColumn() > 0) {
-                return; // User already has this role
-            }
-            
-            // Assign role to user
-            $stmt = $db->prepare('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)');
-            $stmt->execute([$userId, (int)$roleId]);
-        } catch (PDOException $e) {
-            throw new Exception('Error adding role: ' . $e->getMessage());
+
+        $stmt = $db->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='roles'");
+        $stmt->execute();
+        $tableExists = $stmt->fetchColumn();
+
+        if (!$tableExists) {
+            $db->exec("
+                CREATE TABLE roles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT UNIQUE NOT NULL CHECK(name IN ('freelancer', 'client', 'admin'))
+                )
+            ");
         }
+
+        $stmt = $db->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='user_roles'");
+        $stmt->execute();
+        $tableExists = $stmt->fetchColumn();
+
+        if (!$tableExists) {
+            $db->exec("
+                CREATE TABLE user_roles (
+                    user_id INTEGER NOT NULL,
+                    role_id INTEGER NOT NULL,
+                    PRIMARY KEY (user_id, role_id),
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+                )
+            ");
+        }
+
+        $roleId = self::ensureRoleExists($roleName);
+
+        $stmt = $db->prepare('SELECT COUNT(*) FROM user_roles WHERE user_id = ? AND role_id = ?');
+        $stmt->execute([$userId, (int)$roleId]);
+        if ($stmt->fetchColumn() > 0) {
+            return;
+        }
+
+        $stmt = $db->prepare('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)');
+        $stmt->execute([$userId, (int)$roleId]);
     }
-    
+
     private static function ensureRoleExists(string $roleName) {
         $db = Database::getInstance();
         
         try {
-            // Get role ID
             $stmt = $db->prepare('SELECT id FROM roles WHERE name = ?');
             $stmt->execute([$roleName]);
             $roleId = $stmt->fetchColumn();
             
-            // If role doesn't exist, create it
             if (!$roleId) {
-                // Check if the role name is valid (based on CHECK constraint in schema)
                 if (!in_array($roleName, ['freelancer', 'client', 'admin'])) {
                     throw new Exception('Invalid role name');
                 }
@@ -253,12 +206,11 @@ class User {
                 $roleId = (int)$db->lastInsertId();
             }
             
-            // Always ensure roleId is an integer
             return (int)$roleId;
         } catch (PDOException $e) {
             throw new Exception('Error ensuring role exists: ' . $e->getMessage());
         }    }
-    
+
     public static function getAllUsers() {
         $db = Database::getInstance();
         
@@ -267,7 +219,6 @@ class User {
             $stmt->execute();
             $users = $stmt->fetchAll();
             
-            // Add roles to each user
             foreach ($users as &$user) {
                 $user['roles'] = self::getUserRoles((int)$user['id']);
             }
@@ -275,57 +226,45 @@ class User {
             return $users;
         } catch (PDOException $e) {
             throw new Exception('Error getting all users: ' . $e->getMessage());
+
+
         }
+
+        return (int)$roleId;
     }
+
     
-    /**
-     * Delete a user and all their associated data (services, transactions, etc.)
-     * @param int $userId The ID of the user to delete
-     * @return bool True if successful
-     * @throws Exception If there is a database error
-     */
     public static function deleteUser(int $userId) {
         $db = Database::getInstance();
         
         try {
-            // Start transaction to ensure all related data is deleted
             $db->beginTransaction();
-            
-            // First, delete user's roles
             $stmt = $db->prepare('DELETE FROM user_roles WHERE user_id = ?');
             $stmt->execute([$userId]);
             
-            // Delete user's services (if the user is a freelancer)
             $stmt = $db->prepare('DELETE FROM services WHERE freelancer_id = ?');
             $stmt->execute([$userId]);
             
-            // Delete user's transactions as a client
             $stmt = $db->prepare('DELETE FROM transactions WHERE client_id = ?');
             $stmt->execute([$userId]);
             
-            // Delete user's transactions as a freelancer
             $stmt = $db->prepare('DELETE FROM transactions WHERE freelancer_id = ?');
             $stmt->execute([$userId]);
             
-            // Delete user's messages (if there's a messages table)
             try {
                 $stmt = $db->prepare('DELETE FROM messages WHERE sender_id = ? OR receiver_id = ?');
                 $stmt->execute([$userId, $userId]);
             } catch (PDOException $e) {
-                // Ignore error if messages table doesn't exist
             }
             
-            // Finally, delete the user
             $stmt = $db->prepare('DELETE FROM users WHERE id = ?');
             $stmt->execute([$userId]);
             
-            // Commit the transaction
             $db->commit();
             
             return true;
             
         } catch (PDOException $e) {
-            // Roll back the transaction if something failed
             $db->rollBack();
             throw new Exception('Error deleting user: ' . $e->getMessage());
         }
@@ -356,16 +295,14 @@ class User {
         $db = Database::getInstance();
         
         try {
-            // Get role ID
             $stmt = $db->prepare('SELECT id FROM roles WHERE name = ?');
             $stmt->execute([$roleName]);
             $roleId = $stmt->fetchColumn();
             
             if (!$roleId) {
-                return false; // Role doesn't exist
+                return false; 
             }
             
-            // Remove role from user
             $stmt = $db->prepare('DELETE FROM user_roles WHERE user_id = ? AND role_id = ?');
             $stmt->execute([$userId, $roleId]);
             
@@ -376,17 +313,17 @@ class User {
     }
 
     public static function updateProfile($id, $name, $username, $currentPassword = '', $newPassword = '', $email = '', $isAdminEdit = false) {
+
         $db = Database::getInstance();
-        
-        // First get the current user data
+
         $stmt = $db->prepare('SELECT * FROM users WHERE id = ?');
         $stmt->execute([$id]);
         $user = $stmt->fetch();
+
         if (!$user) {
             throw new Exception('User not found');
         }
-        
-        // If changing username, check if new username is available
+
         if ($username !== $user['username']) {
             $stmt = $db->prepare('SELECT id FROM users WHERE username = ? AND id != ?');
             $stmt->execute([$username, $id]);
@@ -394,20 +331,18 @@ class User {
                 throw new Exception('Username already exists');
             }
         }
+
         
-        // Verify current password only when changing password (and not admin edit)
         $isAdminEdit = func_num_args() > 5 && func_get_arg(5) === true;
         
         if (!empty($newPassword) && !$isAdminEdit) {
-            // If current password is empty, throw error
             if (empty($currentPassword)) {
                 throw new Exception('Current password is required when changing password');
             }
             
             $isPasswordValid = false;
             
-            // For backward compatibility with sha1 passwords
-            if (strlen($user['password']) === 40) { // SHA1 hash length
+            if (strlen($user['password']) === 40) { 
                 $isPasswordValid = (sha1($currentPassword) === $user['password']);
             } else {
                 $isPasswordValid = password_verify($currentPassword, $user['password']);
@@ -416,37 +351,32 @@ class User {
             if (!$isPasswordValid) {
                 throw new Exception('Current password is incorrect');
             }
+
         }
-        
-        // Check if email is provided and different from current
+
         if (!empty($email) && $email !== ($user['email'] ?? '')) {
-            // Check if email already exists
             $stmt = $db->prepare('SELECT id FROM users WHERE email = ? AND id != ?');
             $stmt->execute([$email, $id]);
             if ($stmt->fetch()) {
                 throw new Exception('Email already exists');
             }
         }
-        
-        // Prepare the SQL based on which fields are changing
+
         if (!empty($newPassword) && !empty($email)) {
-            // Update name, username, password, and email
             $stmt = $db->prepare('UPDATE users SET name = ?, username = ?, password = ?, email = ? WHERE id = ?');
             $stmt->execute([$name, $username, password_hash($newPassword, PASSWORD_DEFAULT), $email, $id]);
         } elseif (!empty($newPassword)) {
-            // Update name, username, and password
             $stmt = $db->prepare('UPDATE users SET name = ?, username = ?, password = ? WHERE id = ?');
             $stmt->execute([$name, $username, password_hash($newPassword, PASSWORD_DEFAULT), $id]);
         } elseif (!empty($email)) {
-            // Update name, username, and email
             $stmt = $db->prepare('UPDATE users SET name = ?, username = ?, email = ? WHERE id = ?');
             $stmt->execute([$name, $username, $email, $id]);
         } else {
-            // Update only name and username
             $stmt = $db->prepare('UPDATE users SET name = ?, username = ? WHERE id = ?');
             $stmt->execute([$name, $username, $id]);
         }
-        
+
         return self::get_user_by_id($id);
     }
 }
+?>

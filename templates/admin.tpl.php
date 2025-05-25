@@ -1,13 +1,6 @@
 <?php
 declare(strict_types=1);
 
-/**
- * Draw the admin panel with user management features
- * 
- * @param array $users List of all us                                <td><?= htmlspecialchars($category['name']) ?></td>
-                                <td><?= htmlspecialchars($category['description'] ?? 'No description') ?></td>
-                                <td><?= Service::countServicesInCategory((int)$category['id']) ?></td> with their details
- */
 function drawAdminPanel(array $users) { ?>
     <main class="admin-panel">
         <div class="container">
@@ -56,12 +49,9 @@ function drawAdminPanel(array $users) { ?>
                                 </td>
                                 <td><?= date('Y-m-d', strtotime($user['created_at'])) ?></td>
                                 <td class="actions">
-                                    <!-- View profile action -->
                                     <a href="../pages/profile.php?id=<?= $user['id'] ?>" class="btn btn-sm" title="View Profile">
                                         <i class="fas fa-eye"></i> View
                                     </a>
-                                      <!-- Admin role actions -->                                    <div class="admin-action-column">
-                                        <!-- Admin role actions -->
                                         <?php if (in_array('admin', $user['roles'])): ?>
                                             <?php if ($_SESSION['user_id'] != $user['id']): ?>
                                             <a href="admin.php?action=remove_admin&user_id=<?= $user['id'] ?>" 
@@ -79,18 +69,17 @@ function drawAdminPanel(array $users) { ?>
                                                 <i class="fas fa-user-shield"></i> Make Admin
                                             </a>
                                         <?php endif; ?>
-                                          <!-- Delete user action - don't show for the current admin -->
                                         <?php if ($_SESSION['user_id'] != $user['id']): ?>
-                                            <form action="../actions/action_delete_user.php" method="get" style="width: 100%;">
+                                            <a action="../actions/action_delete_user.php" method="get" style="width: 100%;">
                                                 <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                                 <button type="submit" 
                                                 class="btn btn-sm btn-danger delete-user-btn" 
                                                 title="Delete User"
                                                 style="width: 100%;"
                                                 onclick="return confirm('WARNING: This will permanently delete this user and ALL their data including services, transactions, and messages. This action cannot be undone. Are you sure?');">
-                                                    <i class="fas fa-trash"></i> Delete User
+                                                <i class="fas fa-trash">Delete User</i> 
                                                 </button>
-                                            </form>
+                                        </a>
                                         <?php endif; ?>
                                     </div>
                                 </td>
@@ -114,7 +103,7 @@ function drawAdminPanel(array $users) { ?>
             </a>
         </div>
         
-        <!-- Add Category Form (hidden by default) -->        <div id="add-category-form" class="form-container" style="display: none;">
+        <div id="add-category-form" class="form-container" style="display: none;">
             <form action="../actions/action_add_category.php" method="post" class="admin-form">
                 <div class="form-group">
                     <label for="category-name" class="form-label">Category Name</label>
@@ -158,7 +147,7 @@ function drawAdminPanel(array $users) { ?>
                                     <a href="../actions/action_delete_category.php?id=<?= $category['id'] ?>" 
                                        class="btn btn-sm btn-danger"
                                        onclick="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">
-                                        <i class="fas fa-trash"></i> Delete
+                                        <i class="fas fa-trash">Delete</i> 
                                     </a>
                                 </td>
                             </tr>
@@ -168,7 +157,7 @@ function drawAdminPanel(array $users) { ?>
             </table>
         </div>
         
-        <!-- Edit Category Form (hidden by default) -->        <div id="edit-category-form" class="form-container" style="display: none;">
+        <div id="edit-category-form" class="form-container" style="display: none;">
             <form action="../actions/action_update_category.php" method="post" class="admin-form">
                 <input type="hidden" id="edit-category-id" name="id" value="">
                 <div class="form-group">
@@ -184,7 +173,6 @@ function drawAdminPanel(array $users) { ?>
     </section>
 
     <script>
-        // Add category form toggle
         document.getElementById('add-category-btn').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('add-category-form').style.display = 'block';
@@ -193,7 +181,6 @@ function drawAdminPanel(array $users) { ?>
             document.getElementById('add-category-form').style.display = 'none';
             document.getElementById('category-name').value = '';
         });
-          // Edit category functionality
         const editButtons = document.querySelectorAll('.edit-category');
         editButtons.forEach(button => {
             button.addEventListener('click', function(e) {
@@ -205,7 +192,6 @@ function drawAdminPanel(array $users) { ?>
                 document.getElementById('edit-category-name').value = name;
                 document.getElementById('edit-category-form').style.display = 'block';
                 
-                // Scroll to form
                 document.getElementById('edit-category-form').scrollIntoView({ behavior: 'smooth' });
             });
         });

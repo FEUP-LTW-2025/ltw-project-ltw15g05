@@ -97,7 +97,6 @@ class Transaction {
             $stmt->execute([$clientId]);
             return $stmt->fetchAll();
         } catch (PDOException $e) {
-            // Return empty array if there's any error
             return [];
         }
     }
@@ -106,7 +105,6 @@ class Transaction {
         $db = Database::getInstance();
         
         try {
-            // First try to query with service_images table
             $stmt = $db->prepare('
                 SELECT t.*, 
                        s.title as service_title, 
@@ -121,7 +119,6 @@ class Transaction {
             $stmt->execute([$freelancerId]);
             return $stmt->fetchAll();
         } catch (PDOException $e) {
-            // If service_images table doesn't exist, use this simpler query
             $stmt = $db->prepare('
                 SELECT t.*, 
                        s.title as service_title, 
@@ -152,7 +149,6 @@ class Transaction {
         return $stmt->execute([$status, $id]);
     }
     
-    // Add review for a completed transaction
     public static function addReview(int $transactionId, int $clientId, int $serviceId, int $rating, string $comment = ''): int {
         $db = Database::getInstance();
         
@@ -171,7 +167,6 @@ class Transaction {
         return $db->lastInsertId();
     }
     
-    // Get service average rating
     public static function getServiceRating(int $serviceId): ?float {
         $db = Database::getInstance();
         
@@ -191,7 +186,6 @@ class Transaction {
         return null;
     }
     
-    // Get service reviews
     public static function getServiceReviews(int $serviceId): array {
         $db = Database::getInstance();
         

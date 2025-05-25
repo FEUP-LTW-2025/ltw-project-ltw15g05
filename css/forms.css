@@ -1,14 +1,4 @@
-/**
- * FORMS.CSS
- * Contains all form-related styling across the site
- * 
- * This file includes:
- * - Form containers and layouts
- * - Input fields styling (text, email, password, etc.)
- * - Form validation and error styling
- * - Button styling specific to forms
- * - Login/Register form specific styling
- */
+
 :root {
     --primary: #4f46e5;
     --primary-light: #6366f1;
@@ -24,7 +14,6 @@
     --shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* Form Containers */
 .form-container,
 .edit-profile-container,
 .autenticação {
@@ -54,7 +43,6 @@
     transform: translate(-50%, -50%);
 }
 
-/* Form Headers */
 .form-container h1,
 .edit-profile-container h1,
 .autenticação h1 {
@@ -84,7 +72,6 @@
     margin-bottom: 2rem;
 }
 
-/* Form Sections */
 .form-container form section,
 .edit-profile-container form section,
 .autenticação form section {
@@ -92,7 +79,6 @@
     transition: all 0.2s ease;
 }
 
-/* Form Labels */
 .form-container label,
 .edit-profile-container label,
 .autenticação label,
@@ -109,7 +95,6 @@
     font-weight: 600;
 }
 
-/* Form Inputs */
 .form-container input,
 .form-container select,
 .form-container textarea,
@@ -128,7 +113,6 @@
     box-sizing: border-box;
 }
 
-/* Input Focus States */
 .form-container input:focus,
 .form-container select:focus,
 .form-container textarea:focus,
@@ -147,7 +131,6 @@
     border-color: #6DD6AD;
 }
 
-/* Notes and Small Text */
 .form-container .note,
 .form-container small,
 .edit-profile-container .note,
@@ -164,7 +147,6 @@
     color: #d1d1d1;
 }
 
-/* Button Groups */
 .form-container .button-group,
 .edit-profile-container .button-group,
 .form-actions {
@@ -174,7 +156,6 @@
     margin-top: 2rem;
 }
 
-/* Form Buttons */
 .form-container button,
 .edit-profile-container .btn-primary,
 .autenticação button[type="submit"] {
@@ -198,7 +179,6 @@
     margin-top: 1.5rem;
 }
 
-/* Button Hover States */
 .form-container button:hover,
 .edit-profile-container .btn-primary:hover {
     background-color: var(--primary-dark);
@@ -210,7 +190,6 @@
     background-color: #56c1a0;
 }
 
-/* Secondary Buttons */
 .edit-profile-container .btn-secondary,
 .form-container .btn-secondary {
     background-color: #f3f4f6;
@@ -236,7 +215,6 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Links */
 .form-container a,
 .edit-profile-container a,
 .autenticação a {
@@ -263,7 +241,6 @@
     text-decoration: underline;
 }
 
-/* Form Rows (for multi-column layouts) */
 .form-row {
     display: flex;
     gap: 1.5rem;
@@ -275,20 +252,18 @@
     flex: 1;
 }
 
-/* Checkbox Styling */
 .checkbox-wrapper {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-left: -0.5rem; /* Move checkbox more to the left */
+    margin-left: -0.5rem; 
 }
-
 .form-checkbox {
     width: auto;
-    margin-right: 0.25rem; /* Add some space between checkbox and label */
+    margin-right: 0.25rem; 
 }
 
-/* Form Error and Success Messages */
+
 .error,
 .form-container .alert-danger,
 .edit-profile-container .error {
@@ -316,13 +291,11 @@
     border-left: 3px solid #10b981;
 }
 
-/* Form Hover Effects */
 .form-container form section:hover label,
 .edit-profile-container form section:hover label {
     color: var(--primary);
 }
 
-/* Animation Keyframes */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -334,7 +307,6 @@
     }
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .form-container,
     .edit-profile-container {
@@ -365,6 +337,6 @@
     .form-container input,
     .edit-profile-container input,
     .autenticação input {
-        font-size: 16px; /* Prevents zoom on mobile */
+        font-size: 16px; 
     }
 }

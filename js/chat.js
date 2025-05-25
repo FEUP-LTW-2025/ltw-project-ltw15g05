@@ -12,7 +12,6 @@ function refreshMessages() {
 
 setInterval(refreshMessages, 5000);
 
-// Also refresh when the page gains focus
 window.addEventListener('focus', refreshMessages);
 
 
@@ -21,7 +20,6 @@ function autoGrow(element) {
     element.style.height = (element.scrollHeight) + 'px';
 }
 
-// Handle Enter key for submission
 document.querySelector('textarea').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -35,10 +33,8 @@ function scrollToBottom() {
     }
 }
 
-// Initial scroll on page load
 window.addEventListener('load', scrollToBottom);
 
-// Scroll after messages are fetched via AJAX (if using AJAX)
 const observer = new MutationObserver(scrollToBottom);
 const chatMessages = document.querySelector('.chat-messages');
 if (chatMessages) {
@@ -52,11 +48,10 @@ document.addEventListener('keydown', (e) => {
     const active = document.activeElement;
     const textarea = document.querySelector('textarea[name="content"]');
 
-    // Only focus if you're not in an input/textarea/button and not pressing special keys like F12
     if (
         textarea &&
         !['INPUT', 'TEXTAREA', 'BUTTON'].includes(active.tagName) &&
-        e.key.length === 1 // Only real character keys, not Shift, Ctrl, etc.
+        e.key.length === 1 
     ) {
         textarea.focus();
     }

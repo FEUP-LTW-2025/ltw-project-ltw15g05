@@ -1,11 +1,7 @@
 <?php
 declare(strict_types=1);
 
-/**
- * Format the timestamp for display in message list
- * @param string $timestamp The timestamp to format
- * @return string Formatted time string
- */
+
 function formatMessageTime(string $timestamp): string {
     $messageTime = strtotime($timestamp);
     $now = time();
@@ -19,7 +15,7 @@ function formatMessageTime(string $timestamp): string {
     } elseif ($diff < 86400) {
         $hours = floor($diff / 3600);
         return $hours . 'h ago';
-    } elseif ($diff < 604800) { // 7 days
+    } elseif ($diff < 604800) { 
         $days = floor($diff / 86400);
         return $days . 'd ago';
     } else {
@@ -34,7 +30,6 @@ function formatMessageTime(string $timestamp): string {
     $isAdmin = in_array('admin', $roles);
     $viewerIsAdmin = $currentUser && in_array('admin', $currentUser['roles']);
     
-    // Get any success or error messages
     $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success']) : null;
     $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
 ?>
@@ -57,11 +52,12 @@ function formatMessageTime(string $timestamp): string {
                     <a href="../pages/admin.php" class="btn btn-outline btn-sm">← Back to Admin Panel</a>
                 </div>
             <?php endif; ?>
-            
+            <?php $profilePath = "/images/user/default.jpg"?>
             <div class="profile-card">
                 <div class="profile-header">
                     <div class="profile-avatar">
-                        <?= strtoupper(substr($userData['name'], 0, 1)) ?>
+                        <img src="<?= $profilePath ?>" alt="Imagem do user" class="user-image">
+                        
                     </div>
                     <h1><?= htmlspecialchars($userData['name']) ?></h1>
                     <p>@<?= htmlspecialchars($userData['username']) ?></p>
@@ -89,12 +85,11 @@ function formatMessageTime(string $timestamp): string {
                     </div>
                     
                     <div class="profile-actions">
-                        <!-- Display Edit Profile button for all users viewing their own profile -->
                         <?php if (!$isViewingOtherProfile): ?>
                             <a href="edit_profile.php" class="btn btn-outline">Edit Profile</a>
+                            <a href="chat.php" class="btn btn-outline">Messages</a>
                         <?php endif; ?>
                         
-                        <!-- Additional actions for user's own profile -->
                         <?php if (!$isViewingOtherProfile): ?>
                             <?php if (!$isFreelancer): ?>
                                 <form action="../actions/action_become_freelancer.php" method="post">
@@ -104,20 +99,16 @@ function formatMessageTime(string $timestamp): string {
                                 <a href="new_service.php" class="btn btn-primary">Create New Service</a>
                             <?php endif; ?>
                         <?php endif; ?>
+
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Tabs for different sections -->
         <div class="profile-tabs">
             <div class="tab-header">
                 <button class="tab-btn active" data-tab="services">My Services</button>
                 <button class="tab-btn" data-tab="orders">My Orders</button>
-                <button class="tab-btn" data-tab="messages">Messages</button>
-                <?php if ($isFreelancer): ?>
-                    <button class="tab-btn" data-tab="earnings">Earnings</button>
-                <?php endif; ?>
             </div>
             
             <div class="tab-content active" id="services">
@@ -155,7 +146,6 @@ function formatMessageTime(string $timestamp): string {
             <div class="tab-content" id="orders">
                 <?php
                 require_once(__DIR__ . '/../database/purchase.class.php');
-                // Use both purchases and transactions
                 $purchases = Purchase::getUserPurchases((int)$userData['id']);
                 $transactions = $clientTransactions ?? [];
                 ?>
@@ -312,13 +302,11 @@ function formatMessageTime(string $timestamp): string {
                 <?php endforeach; ?>
             <?php endif; ?>
 
-            <!-- Informações do usuário -->
             <div class="user-info">
                 <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
                 <p><strong>Member since:</strong> <?= date('d/m/Y', strtotime($user['created_at'])) ?></p>
             </div>
 
-            <!-- Adicione aqui a seção de compras -->
             <?php
             require_once(__DIR__ . '/../database/purchase.class.php');
 

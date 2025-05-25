@@ -4,11 +4,9 @@ declare(strict_types=1);
 require_once(__DIR__ . '/../includes/session.php');
 require_once(__DIR__ . '/../database/user.class.php');
 
-// Get the current session user
 $session = Session::getInstance();
 $currentUser = $session->getUser();
 
-// Check if the user is logged in and has admin role
 if (!$currentUser || !in_array('admin', $currentUser['roles'])) {
     header('Location: ../index.php');
     exit();
@@ -17,7 +15,6 @@ if (!$currentUser || !in_array('admin', $currentUser['roles'])) {
 if (isset($_GET['user_id'])) {
     $userId = (int)$_GET['user_id'];
     
-    // Don't allow admins to delete themselves
     if ($userId === (int)$currentUser['id']) {
         $_SESSION['error_message'] = "You cannot delete your own account.";
         header('Location: ../pages/admin.php');
@@ -25,17 +22,13 @@ if (isset($_GET['user_id'])) {
     }
     
     try {
-        // Get user information for logging purposes
         $userData = User::get_user_by_id($userId);
         
         if (!$userData) {
             throw new Exception('User not found');
         }
-          // Delete the user and all their data
         User::deleteUser($userId);
-          // Log the action
         require_once(__DIR__ . '/../includes/database.php');
-        // Define logAdminAction locally if it's not already defined
         if (!function_exists('logAdminAction')) {
             function logAdminAction($adminId, $action, $targetUserId = null) {
                 try {
@@ -57,7 +50,6 @@ if (isset($_GET['user_id'])) {
     }
 }
 
-// Redirect back to admin panel
 header('Location: ../pages/admin.php');
 exit();
 ?>

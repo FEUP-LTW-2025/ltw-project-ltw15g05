@@ -9,39 +9,31 @@ require_once(__DIR__ . '/../database/user.class.php');
 $session = Session::getInstance();
 $currentUser = $session->getUser();
 
-// Check if the user is logged in
 if (!$currentUser) {
     header('Location: form_login.php');
     exit();
 }
 
-// Determine which user profile to display
-// If an ID is provided in the URL and the current user is an admin, show that user's profile
-// Otherwise, show the current user's own profile
+
 $profileUserId = isset($_GET['id']) && in_array('admin', $currentUser['roles']) 
     ? (int)$_GET['id'] 
     : (int)$currentUser['id'];
     
-// For debugging
 error_log("Current user ID: " . $currentUser['id'] . " (type: " . gettype($currentUser['id']) . 
          "), Profile user ID: " . $profileUserId . " (type: " . gettype($profileUserId) . ")");
 
-// Get the user data for the profile we're viewing
 $userData = $profileUserId === (int)$currentUser['id'] 
     ? $currentUser 
     : User::get_user_by_id($profileUserId);
 
-// If the user doesn't exist, redirect to the user's own profile
 if (!$userData) {
     header('Location: profile.php');
     exit();
 }
 
-// Get any success or error messages from query parameters
 $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success']) : null;
 $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
 
-// Load user's services if they are a freelancer
 $services = [];
 $clientTransactions = [];
 $freelancerTransactions = [];
@@ -55,7 +47,6 @@ if (in_array('freelancer', $userData['roles'])) {
     $services = Service::getByFreelancerId((int)$userData['id']);
     $freelancerTransactions = Transaction::getByFreelancerId((int)$userData['id']);
     
-    // Calculate statistics
     foreach ($freelancerTransactions as $transaction) {
         if ($transaction['status'] === 'completed') {
             $totalEarnings += $transaction['payment_amount'];
@@ -66,13 +57,7 @@ if (in_array('freelancer', $userData['roles'])) {
     }
 }
 
-// Load client transactions
 $clientTransactions = Transaction::getByClientId((int)$userData['id']);
-// Load conversations
-// This would be implemented in a Message class
-// $conversations = Message::getUserConversations($userData['id']);
-
-// Determine if the user is viewing someone else's profile
 $isViewingOtherProfile = $profileUserId !== (int)$currentUser['id'];
 error_log("Is viewing other profile: " . ($isViewingOtherProfile ? 'Yes' : 'No'));
 

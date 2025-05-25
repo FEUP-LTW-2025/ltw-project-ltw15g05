@@ -90,7 +90,6 @@ declare(strict_types=1);
     </footer>
     
     <script>
-        // Add subtle button hover effects
         document.querySelectorAll('.btn, .profile-icon, .help-link').forEach(element => {
             element.addEventListener('mouseenter', () => {
                 element.style.transform = 'translateY(-2px)';
@@ -101,10 +100,8 @@ declare(strict_types=1);
                 element.style.boxShadow = 'none';
             });
             
-            // Add click effect for profile icon
             if (element.classList.contains('profile-icon')) {
                 element.addEventListener('click', (e) => {
-                    // Visual feedback on click
                     element.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         element.style.transform = 'translateY(-2px)';

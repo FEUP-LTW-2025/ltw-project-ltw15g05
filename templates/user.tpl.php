@@ -93,7 +93,6 @@ declare(strict_types=1);
         <?php endif; ?>
         
         <form action="../actions/action_edit_profile.php<?= $isAdminEdit ? '?id=' . $userData['id'] : '' ?>" method="post">
-            <!-- Debug info -->
             <?php error_log("Form action: ../actions/action_edit_profile.php" . ($isAdminEdit ? '?id=' . $userData['id'] : '')); ?>
             <?php if (isset($_GET['error'])): ?>
                 <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>

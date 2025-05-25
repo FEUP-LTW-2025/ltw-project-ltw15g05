@@ -1,6 +1,6 @@
 # ltw15g05
 
-Tiago Arteiro - up
+Tiago Arteiro - up202307815
 Tiago Correia - up202306129
 Luís Ferreira - up202208429
 
@@ -21,7 +21,7 @@ Luís Ferreira - up202208429
 - [x] Browse services using filters like category, price, and rating.
 - [x] Engage with freelancers to ask questions or request custom orders.
 - [x] Hire freelancers and proceed to checkout (simulate payment process).
-- [ ] Leave ratings and reviews for completed services.
+- [x] Leave ratings and reviews for completed services.
 
 **Admins:**
 - [x] Elevate a user to admin status.

@@ -9,7 +9,6 @@ $session = Session::getInstance();
 $username = $_POST['username'] ?? '';
 $password = $_POST['password'] ?? '';
 
-// Basic validation
 if (empty($username) || empty($password)) {
     $session->addMessage('error', 'Username and password are required');
     header('Location: ../pages/form_login.php');

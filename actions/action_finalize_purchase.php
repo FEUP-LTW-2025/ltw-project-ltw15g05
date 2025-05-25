@@ -7,7 +7,6 @@ require_once(__DIR__ . '/../database/service.class.php');
 require_once(__DIR__ . '/../database/transaction.class.php');
 require_once(__DIR__ . '/../database/init_database.php');
 
-// Ensure database tables are up-to-date silently (without output)
 ob_start();
 $db = Database::getInstance();
 ensure_purchases_table_exists($db);
@@ -26,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $serviceId = $_POST['service_id'] ?? null;
     $paymentMethod = $_POST['payment_method'] ?? null;
 
-    // Validar o método de pagamento
     $validPaymentMethods = ['mbway', 'credit_card', 'paypal'];
     if (!$serviceId || !$paymentMethod || !in_array($paymentMethod, $validPaymentMethods)) {
         $session->addMessage('error', 'Invalid service or payment method.');
@@ -35,24 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Get service details to retrieve freelancer_id and price
         $service = Service::getService((int)$serviceId);
         if (!$service) {
             throw new Exception('Service not found.');
         }
 
-        // Registrar a compra no banco de dados
         if (!Purchase::createPurchase((int)$user['id'], (int)$serviceId, $paymentMethod)) {
             throw new Exception('Failed to insert purchase into database.');
         }
 
-        // Create a transaction record for the client's orders
         $transactionId = Transaction::create(
             (int)$serviceId,
             (int)$user['id'],
             (int)$service->freelancer_id,
             (float)$service->price,
-            '' // No custom requirements for now
+            ''
         );
 
         if (!$transactionId) {

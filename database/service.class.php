@@ -333,19 +333,10 @@ class Service {
         ];
     }
 
-    // Category management methods
     
-    /**
-     * Add a new category
-     * 
-     * @param string $name The category name
-     * @param string|null $description Optional category description
-     * @return int The ID of the new category
-     */
     public static function addCategory(string $name, ?string $description = null): int {
         $db = Database::getInstance();
         
-        // Check if category already exists
         $checkStmt = $db->prepare('SELECT id FROM categories WHERE name = ?');
         $checkStmt->execute([$name]);
         
@@ -353,25 +344,16 @@ class Service {
             throw new Exception('A category with this name already exists.');
         }
         
-        // Add new category - description is ignored as the table doesn't have this column
         $stmt = $db->prepare('INSERT INTO categories (name) VALUES (?)');
         $stmt->execute([$name]);
         
         return (int)$db->lastInsertId();
     }
     
-    /**
-     * Update an existing category
-     * 
-     * @param int $id The category ID
-     * @param string $name The new name
-     * @param string|null $description Optional new description
-     * @return bool Success status
-     */
+
     public static function updateCategory(int $id, string $name, ?string $description = null): bool {
         $db = Database::getInstance();
         
-        // Check if another category with the same name exists
         $checkStmt = $db->prepare('SELECT id FROM categories WHERE name = ? AND id != ?');
         $checkStmt->execute([$name, $id]);
         
@@ -379,24 +361,15 @@ class Service {
             throw new Exception('Another category with this name already exists.');
         }
         
-        // Update category - description is ignored as the table doesn't have this column
         $stmt = $db->prepare('UPDATE categories SET name = ? WHERE id = ?');
         $stmt->execute([$name, $id]);
         
         return $stmt->rowCount() > 0;
     }
-    
-    /**
-     * Delete a category
-     * 
-     * @param int $id The category ID
-     * @return bool Success status
-     * @throws Exception if the category is in use by services
-     */
+
     public static function deleteCategory(int $id): bool {
         $db = Database::getInstance();
         
-        // Check if category is in use by any services
         $checkStmt = $db->prepare('SELECT COUNT(*) as count FROM services WHERE category_id = ?');
         $checkStmt->execute([$id]);
         $result = $checkStmt->fetch();
@@ -405,19 +378,12 @@ class Service {
             throw new Exception('This category cannot be deleted because it is being used by one or more services.');
         }
         
-        // Delete the category if not in use
         $stmt = $db->prepare('DELETE FROM categories WHERE id = ?');
         $stmt->execute([$id]);
         
         return $stmt->rowCount() > 0;
     }
-    
-    /**
-     * Get a specific category by ID
-     * 
-     * @param int $id The category ID
-     * @return array|null The category data or null if not found
-     */
+
     public static function getCategoryById(int $id): ?array {
         $db = Database::getInstance();
         
@@ -428,12 +394,7 @@ class Service {
         return $category ?: null;
     }
     
-    /**
-     * Count services in a category
-     * 
-     * @param int $categoryId The category ID
-     * @return int Number of services in the category
-     */
+
     public static function countServicesInCategory(int $categoryId): int {
         $db = Database::getInstance();
         

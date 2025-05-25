@@ -1,3 +1,17 @@
+DROP TABLE IF EXISTS admin_actions;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS booking_requests;
+DROP TABLE IF EXISTS portfolio;
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS favorites;
+DROP TABLE IF EXISTS cart;
+DROP TABLE IF EXISTS services;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
@@ -47,23 +61,6 @@ CREATE TABLE purchases (
     FOREIGN KEY (service_id) REFERENCES services(id)
 );
 
-CREATE TABLE cart (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    service_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (service_id) REFERENCES services(id)
-);
-
-CREATE TABLE favorites (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    service_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (service_id) REFERENCES services(id)
-);
-
-
 CREATE TABLE categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
@@ -80,19 +77,6 @@ CREATE TABLE transactions (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     completed_at DATETIME DEFAULT NULL,
     FOREIGN KEY (service_id) REFERENCES services(id),
-    FOREIGN KEY (client_id) REFERENCES users(id),
-    FOREIGN KEY (freelancer_id) REFERENCES users(id)
-);
-
-CREATE TABLE reviews (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    transaction_id INTEGER NOT NULL,
-    client_id INTEGER NOT NULL,
-    freelancer_id INTEGER NOT NULL,
-    rating INTEGER CHECK(rating BETWEEN 1 AND 5) NOT NULL,
-    comment TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (transaction_id) REFERENCES transactions(id),
     FOREIGN KEY (client_id) REFERENCES users(id),
     FOREIGN KEY (freelancer_id) REFERENCES users(id)
 );
@@ -117,28 +101,19 @@ CREATE TABLE admin_actions (
     FOREIGN KEY (target_user_id) REFERENCES users(id)
 );
 
-CREATE TABLE portfolio (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    freelancer_id INTEGER NOT NULL,
-    image_url TEXT NOT NULL,
-    description TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (freelancer_id) REFERENCES users(id)
-);
 
-CREATE TABLE booking_requests (
+CREATE TABLE reviews (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     client_id INTEGER NOT NULL,
     freelancer_id INTEGER NOT NULL,
-    event_date DATE NOT NULL,
-    location TEXT,
-    details TEXT,
-    status TEXT CHECK(status IN ('pending', 'accepted', 'declined')) DEFAULT 'pending',
+    service_id INTEGER NOT NULL,
+    rating INTEGER CHECK(rating BETWEEN 1 AND 5) NOT NULL,
+    comment TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (client_id) REFERENCES users(id),
-    FOREIGN KEY (freelancer_id) REFERENCES users(id)
+    FOREIGN KEY (freelancer_id) REFERENCES users(id),
+    FOREIGN KEY (service_id) REFERENCES services(id)
 );
-
 
 
 
@@ -188,3 +163,8 @@ INSERT INTO user_roles (user_id, role_id) VALUES
 (8, 1), -- Lisa Miller is a freelancer
 (9, 3), -- Admin User is an admin
 (10, 2); -- Alex Green is a client
+
+INSERT INTO roles (name) VALUES
+('freelancer'),
+('client'),
+('admin');  

@@ -30,8 +30,8 @@ class Session {
         if (!$this->getUserId()) {
             return null;
         }
-        return User::get_user_by_id($this->getUserId());
-    
+        $user = User::get_user_by_id($this->getUserId());
+        return $user !== false ? $user : null; 
     }
 
     public function isLoggedIn(): bool {
@@ -51,7 +51,7 @@ class Session {
     
     public function getMessages(): array {
         $messages = $_SESSION['messages'] ?? [];
-        $_SESSION['messages'] = []; // Clear messages after retrieving
+        $_SESSION['messages'] = []; 
         return $messages;
     }
 
@@ -60,7 +60,6 @@ class Session {
             return;
         }
         
-        // Store updated user data in session for quick access
         $_SESSION['user_data'] = $userData;
     }
 }

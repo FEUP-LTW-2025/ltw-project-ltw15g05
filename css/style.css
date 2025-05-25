@@ -1,40 +1,8 @@
-/* Main Style Sheet - Imports all modular CSS files */
-
-/**
- * CSS ORGANIZATION STRUCTURE
- * 
- * This file serves as the main entry point for all styles. It imports modular CSS files
- * that are organized by function rather than by page.
- * 
- * File Structure:
- * - layout.css: Structural styling (headers, footers, grids, flexbox)
- * - components.css: Reusable UI components (buttons, cards, badges)
- * - forms.css: Form-related styling (inputs, validation, buttons)
- * - specialized.css: Page-specific or feature-specific styling
- * 
- * NOTE: The following files were consolidated and removed:
- * - profile.css (integrated into specialized.css)
- * - edit-profile.css (integrated into specialized.css)
- * - frontpage.css (split across layout.css and components.css)
- * - header-footer.css (integrated into layout.css)
- * - navigation.css (integrated into layout.css)
- * - service.css (integrated into specialized.css)
- * - style2.css (appears to be a draft, can be removed)
- * 
- * EXCEPTIONS TO MODULAR STRUCTURE:
- * - chat.css: Due to its specialized nature and complexity, we've kept the chat styling
- *   in a separate file that's imported directly by the chat-related templates in
- *   addition to style.css (e.g., in messages.tpl.php). This approach allows for more
- *   focused maintenance of the chat interface while still using global styles.
- */
-
-/* Import Core Styles */
 @import url('layout.css');
 @import url('components.css');
 @import url('forms.css');
 @import url('specialized.css');
 
-/* Define global variables */
 :root {
     --primary: #4f46e5;
     --primary-light: #6366f1;
@@ -50,7 +18,6 @@
     --shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
   
-  /* ====== LAYOUT ====== */
   .container {
     width: 100%;
     max-width: 1200px;
@@ -58,7 +25,6 @@
     padding: 0 1rem;
   }
   
-  /* ====== NAVIGATION ====== */
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -85,7 +51,6 @@
     gap: 1rem;
   }
   
-  /* ====== BUTTONS ====== */
   .btn {
     text-decoration: none;
     display: inline-flex;
@@ -122,7 +87,6 @@
     color: white;
   }
   
-  /* ====== AUTH PAGES ====== */
   .auth-wrapper {
     min-height: calc(100vh - 72px);
     display: grid;
@@ -156,11 +120,12 @@
     font-size: 0.9rem;
   }
   
-  /* ====== FORMS ====== */
   .form-group {
     margin-bottom: 1.5rem;
   }
-  
+  .autenticação label {
+    color: #561783;
+  }
   .form-label {
     display: block;
     margin-bottom: 0.5rem;
@@ -183,7 +148,6 @@
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
   }
   
-  /* ====== PROFILE PAGE ====== */
   .profile-section {
     padding: 2rem 0;
   }
@@ -234,7 +198,6 @@
     color: var(--gray);
   }
   
-  /* ====== DASHBOARD ====== */
   .dashboard {
     padding: 2rem 0;
   }
@@ -253,7 +216,6 @@
     margin-bottom: 0.5rem;
   }
   
-  /* ====== CARD COMPONENT ====== */
   .card {
     background: white;
     border-radius: var(--radius);
@@ -294,7 +256,7 @@ ul.flex.square li .price {
   text-align: left;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #2a9d8f; /* A pleasant teal green */
+  color: #2a9d8f; 
   margin-top: 10px;
   display: inline-block;
   background-color: #e0f7f4;
@@ -342,7 +304,6 @@ ul.flex.square ul li {
 }
 
 
-/* ====== ALERTS ====== */
   .alert {
     padding: 0.75rem 1rem;
     margin-bottom: 1rem;
@@ -374,7 +335,6 @@ ul.flex.square ul li {
     border: 1px solid #b6effb;
   }
 
-/* ====== CATEGORY NAVIGATION ====== */
 .category-navigation {
   width: 100%;
   border-bottom: 1px solid var(--border);
@@ -426,14 +386,396 @@ ul.flex.square ul li {
   font-weight: 600;
 }
 
-/* Control logo size for authentication pages */
 .autenticação .logo {
-  max-width: 120px !important; /* Override any other styles */
+  max-width: 120px !important; 
   width: auto !important;
   height: auto !important;
 }
 
-/* Media query for mobile responsiveness */
+.freelancer-info {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 2rem;
+}
+
+.user-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #cbd5e1;
+}
+
+.freelancer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.freelancer-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.freelancer-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.message-button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  z-index: 10; 
+  position: relative;
+}
+
+.message-button:hover {
+  background-color: #2980b9;
+}
+
+.user-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #cbd5e1;
+}
+
+
+.price-highlight {
+  margin-top: -2em;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #10b981; 
+  text-align: right;
+}
+
+
+.buy-buttons {
+    text-decoration: none;
+    display: flex;
+    justify-content: flex-end; 
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+form {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.buy-now-form,
+.save-later-form {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.buy-now-form button,
+.save-later-form button {
+    all: unset; 
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-buy-now {
+    text-decoration: none;
+    background-color: #10b981;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-buy-now:hover {
+    background-color: #059669; 
+}
+
+.btn-save-later {
+    background-color: #f3f4f6;
+    color: #374151;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-save-later:hover {
+    background-color: #e5e7eb;
+}
+
+.reviews-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.reviews-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+}
+
+.review {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.review:last-child {
+    margin-bottom: 0;
+}
+
+.review p {
+    margin: 0.5rem 0;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.review strong {
+    color: #111827;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.review small {
+    display: block;
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+
+
+textarea {
+    resize: none;
+}
+
+button[type="submit"] {
+  text-align: center;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #10b981;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.review-form {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.review-form h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+}
+
+.review-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.review-form label {
+    display: block;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.review-form input,
+.review-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #374151;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-form input:focus,
+.review-form textarea:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 5px rgba(124, 58, 237, 0.3);
+    outline: none;
+}
+
+.review-form button[type="submit"] {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #7c3aed; 
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.review-form button[type="submit"]:hover {
+    background-color: #6d28d9; 
+}
+.star-rating {
+  direction: rtl;
+  display: inline-flex;
+  font-size: 2rem;
+  gap: 0.3rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  color: #ccc;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: gold;
+}
+
+.star-rating input:checked ~ label {
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+  transform: scale(1.1);
+}
+
+.rating-value {
+  margin-top: 0.3rem;
+  font-weight: bold;
+  color: #333;
+  font-size: 1rem;
+}
+
+
+.star {
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.numeric-rating {
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: 4px;
+}
+.review {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.review p,
+.review-comment {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-line; 
+}
+.review-comment {
+  font-size: 1rem;
+  color: #333;
+  margin: 0.5rem 0;
+  white-space: pre-line;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: #888;
+  text-align: right;
+}
+
+.no-reviews {
+  color: #777;
+  font-style: italic;
+}
+
+#services {
+  margin: 2rem;
+}
+
+
+@media screen and (max-width: 768px) {
+  .service-details {
+    flex-direction: column;
+  }
+
+  .service-image,
+  .service-meta {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .service-page {
+    padding: 1.5rem;
+    margin: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .category-navigation ul {
     justify-content: flex-start;
@@ -444,13 +786,11 @@ ul.flex.square ul li {
     flex: 0 0 auto;
   }
   
-  /* Even smaller logo on smaller screens */
   .autenticação .logo {
     max-width: 100px !important;
   }
 }
 
-/* ====== UTILITIES ====== */
   .text-center { text-align: center; }
   .mt-1 { margin-top: 0.5rem; }
   .mt-2 { margin-top: 1rem; }

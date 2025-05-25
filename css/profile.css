@@ -5,6 +5,7 @@
 }
 
 .service-card {
+    margin: 1rem;
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -51,7 +52,6 @@
     border-radius: 5px;
 }
 
-/* Orders list styling */
 .orders-list {
     display: flex;
     flex-direction: column;
@@ -59,6 +59,7 @@
 }
 
 .order-item {
+    margin: 1rem;
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -84,7 +85,6 @@
     font-size: 14px;
 }
 
-/* Purchases section styling */
 .purchases-section {
     margin-top: 30px;
     background-color: #f9f9f9;

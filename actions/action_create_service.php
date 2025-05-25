@@ -4,7 +4,6 @@ declare(strict_types=1);
 require_once(__DIR__ . '/../includes/session.php');
 require_once(__DIR__ . '/../database/service.class.php');
 
-// Check if user is logged in
 $session = Session::getInstance();
 $userData = $session->getUser();
 
@@ -30,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $equipment_provided = isset($_POST['equipment_provided']) ? true : false;
     $location = $_POST['location'] ?? null;
 
-    // Basic validation
     if (empty($title) || empty($description) || $category_id <= 0 || $price <= 0 || $delivery_time <= 0) {
         $session->addMessage('error', 'Please fill in all required fields with valid values');
         header('Location: ../pages/new_service.php');
@@ -38,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Create the service
         $service_id = Service::create(
             (int)$userData['id'],
             $title,
@@ -52,9 +49,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $location
         );
 
-        // Success
+        $target_dir = __DIR__ . '/../images/services/';
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0755, true);
+        }
+
+        if (isset($_FILES['image']) && is_uploaded_file($_FILES['image']['tmp_name'])) {
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $imageFileType = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $target_file = $target_dir . $service_id . '.jpg';
+            move_uploaded_file($tmp_name, $target_file);
+        }
+
         $session->addMessage('success', 'Service created successfully');
-        header('Location: ../pages/main.php'); // Redirect to main page
+        header('Location: ../pages/main.php'); 
         exit();
     } catch (Exception $e) {
         $session->addMessage('error', 'Error creating service: ' . $e->getMessage());
@@ -62,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 } else {
-    // Not a POST request
     header('Location: ../pages/new_service.php');
     exit();
 }

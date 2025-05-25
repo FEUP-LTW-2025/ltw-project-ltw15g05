@@ -15,14 +15,12 @@ if (!$userData) {
     exit();
 }
 
-// Check if the user is a freelancer
 if (!in_array('freelancer', $userData['roles'])) {
     $session->addMessage('error', 'You must be a freelancer to create services.');
     header('Location: profile.php');
     exit();
 }
 
-// Get all categories for the select dropdown
 $categories = Service::getAllCategories();
 $messages = $session->getMessages();
 

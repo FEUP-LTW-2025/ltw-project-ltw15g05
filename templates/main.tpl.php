@@ -45,11 +45,19 @@ declare(strict_types=1);
                 <?php foreach ($services as $service) { ?>
                     <li>
                         <article>
-                            <a href="service.php?id=<?=$service->id?>">
-                                <img src="https://picsum.photos/200?service=<?=$service->id?>" width="200" height="200" alt="Service image">
-                                <h3><?=htmlspecialchars($service->title)?></h3>
+                            <?php
+                                $serviceImagePath = "images/services/{$service->id}.jpg";
+                                $absolutePath = __DIR__ . "/../$serviceImagePath";
+
+                                if (!file_exists($absolutePath)) {
+                                    $serviceImagePath = "images/services/default.jpg";
+                                }
+                            ?>
+                            <a href="service.php?id=<?= $service->id ?>">
+                                <img src="../<?= $serviceImagePath ?>" width="200" height="200" alt="Service image">
+                                <h3><?= htmlspecialchars($service->title) ?></h3>
                             </a>
-                            <p><?=htmlspecialchars($service->description)?></p>
+                            <p><?= htmlspecialchars($service->description) ?></p>
                             <ul>
                                 <li><strong>Delivery Time:</strong> <?=intval($service->delivery_time)?> days</li>
                                 <li><strong>Photo Style:</strong> <?=htmlspecialchars($service->photo_style)?></li>

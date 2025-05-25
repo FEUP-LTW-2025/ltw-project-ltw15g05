@@ -1,16 +1,4 @@
-/**
- * COMPONENTS.CSS
- * Contains all reusable UI components across the site
- * 
- * This file includes:
- * - Buttons and button variations
- * - Cards and containers
- * - Badges and labels
- * - Tabs and navigation elements
- * - Alerts and notifications
- * - Modal dialogs
- * - Icons and decorative elements
- */
+
 :root {
     --primary: #4f46e5;
     --primary-light: #6366f1;
@@ -26,7 +14,6 @@
     --shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* Cards */
 .card, 
 .profile-card,
 .service-card,
@@ -53,7 +40,6 @@
     color: var(--dark);
 }
 
-/* Buttons */
 .btn, 
 .btn-primary, 
 .btn-secondary, 
@@ -113,9 +99,8 @@
     color: white;
 }
 
-/* Special styling for the delete user button */
 .delete-user-btn {
-    background-color: #b91c1c !important; /* Darker red */
+    background-color: #b91c1c !important;
     box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
 }
 
@@ -128,7 +113,6 @@
     background-color: #0ca876;
 }
 
-/* Badges */
 .role-badge,
 .order-status {
     padding: 0.25rem 0.75rem;
@@ -165,7 +149,6 @@
     color: white;
 }
 
-/* Tabs */
 .tab-header {
     display: flex;
     border-bottom: 1px solid var(--border);
@@ -197,7 +180,6 @@
     display: block;
 }
 
-/* Navigation and Filters */
 .filter-navigation,
 .category-navigation {
     width: 100%;
@@ -239,7 +221,6 @@
     border-bottom: 3px solid #007bff;
 }
 
-/* Dropdown Content */
 .dropdown-content,
 .dropdown-menu {
     display: none;
@@ -272,7 +253,6 @@
     color: #007bff;
 }
 
-/* Alerts */
 .alert {
     padding: 0.75rem 1rem;
     margin-bottom: 1rem;
@@ -304,7 +284,6 @@
     border: 1px solid #b6effb;
 }
 
-/* Empty States */
 .empty-state {
     background-color: white;
     border-radius: var(--radius);
@@ -321,7 +300,6 @@
     margin-bottom: 1.5rem;
 }
 
-/* Avatar Components */
 .profile-avatar,
 .conversation-avatar {
     border-radius: 50%;
@@ -357,7 +335,6 @@
     border: 2px solid #cbd5e1;
 }
 
-/* Header and Footer Components */
 .profile-icon {
     display: flex;
     align-items: center;
@@ -383,7 +360,6 @@
     box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
 }
 
-/* Loader */
 .ajax-loading {
     display: inline-block;
     width: 20px;
@@ -400,7 +376,6 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .tab-header {
         flex-wrap: nowrap;
