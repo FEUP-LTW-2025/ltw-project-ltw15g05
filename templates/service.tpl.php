@@ -201,16 +201,22 @@ require_once(__DIR__ . '/../database/user.class.php');
     <h1><?= htmlspecialchars($service->title) ?></h1>
 
     <div class="service-details">  
-        <?php
-            $servicePath = "/images/services/$service->id.jpg";
-            $absolutePath = __DIR__ . "/../images/services/$service->id.jpg";
+    <?php
+                                $serviceImagePath = "images/services/{$service->id}.jpg";
+                                $absolutePath = __DIR__ . "/../$serviceImagePath";
 
-            if (!file_exists($absolutePath)) {
-                $servicePath = "/images/services/default.jpg";
-            }
-        ?>
-        <img src="<?= $servicePath ?>" alt="Imagem do serviço <?= htmlspecialchars($service->title) ?>" class="service-image">
-
+                                if (!file_exists($absolutePath)) {
+                                    ?><a href="service.php?id=<?=$service->id?>">
+                                    <img src="https://picsum.photos/200?service=<?=$service->id?>" width="400" height="auto" alt="Service image">
+                                    </a><?php
+                                }
+                                else {
+                                    $serviceImagePath = "images/services/{$service->id}.jpg";
+                                    ?><a href="service.php?id=<?= $service->id ?>">
+                                    <img src="../<?= $serviceImagePath ?>" width="400" height="auto" alt="Service image">
+                                </a><?php
+                                }
+                            ?>
       <div class="service-meta">
         <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($service->description)) ?></p>
         <p><strong>Duration:</strong> <?= $service->delivery_time ?> days</p>        <p><strong>Photo Style:</strong> <?= htmlspecialchars($service->photo_style) ?></p>
