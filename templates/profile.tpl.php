@@ -92,9 +92,7 @@ function formatMessageTime(string $timestamp): string {
                         
                         <?php if (!$isViewingOtherProfile): ?>
                             <?php if (!$isFreelancer): ?>
-                                <form action="../actions/action_become_freelancer.php" method="post">
-                                    <button type="submit" class="btn btn-primary">Become a Freelancer</button>
-                                </form>
+                                <a href="../actions/action_become_freelancer.php" class="btn btn-primary">Become a Freelancer</a>
                             <?php else: ?>
                                 <a href="new_service.php" class="btn btn-primary">Create New Service</a>
                             <?php endif; ?>
@@ -138,7 +136,6 @@ function formatMessageTime(string $timestamp): string {
                     <div class="empty-state">
                         <h3>No services yet</h3>
                         <p>Start offering your skills by creating your first service</p>
-                        <a href="new_service.php" class="btn btn-primary">Create Service</a>
                     </div>
                 <?php endif; ?>
             </div>
