@@ -263,7 +263,7 @@ require_once(__DIR__ . '/../database/user.class.php');
     <div class="buy-buttons">
         <form action="../actions/action_add_to_cart.php" method="post" class="buy-now-form">
             <input type="hidden" name="service_id" value="<?= $service->id ?>">
-            <button type="submit" class="btn-buy-now">Comprar</button>
+            <button type="submit" class="btn-buy-now">BUY NOW</button>
         </form>
     </div>
 
