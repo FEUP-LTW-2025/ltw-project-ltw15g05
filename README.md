@@ -39,7 +39,63 @@ Luís Ferreira - up202208429
 ## Credentials
 **Clients:**
 
+- Laura Mendes	lauramendes	laura.mendes@outlook.com	LMendes@19
+
+- André Pinto	andrepinto	andre.pinto@gmail.com	Andre*Pin99
+
+- Beatriz Rocha	bea.rocha	beatriz.rocha@yahoo.com	  Beatriz123_
+
+- Hugo Lopes	hugolopes	hugo.lopes@gmail.com	HLope$2024
+
+- Daniela Sousa	danisousa	daniela.sousa@gmail.com	  DaniSousa_55
+
+- Rafael Matos	rafaelmatos	rafael.matos@gmail.com	RMat@os92
+
+- Cláudia Fonseca	claudiaf	claudia.fonseca@outlook.com	ClauF!1234
+
+- Pedro Lima	pedrolima	pedro.lima@hotmail.com	P3droLima#90
+
+- Vera Marques	veramarques	vera.marques@yahoo.com	VM@rques2021
+
+- Diogo Correia	diogocorreia	diogo.correia@gmail.com	dC2023_pass
+
+- Tânia Moreira	taniamoreira	tania.moreira@gmail.com	 Tan1a!Moreira
+
+- Nuno Reis	nunoreis	nuno.reis@gmail.com	Nuno_R#12
+
+- Sandra Cardoso	sandracardoso	sandra.cardoso@hotmail.com	Sandr@C_2022
+
+- Luís Figueiredo	 luisfig	luis.figueiredo@outlook.com	LF_pass321
+
+- Filipa Silva	filipasilva	filipa.silva@gmail.com	Fili.S!lva2025
+
+
+
 **Freelancers:**
 
+- Mariana Duarte	mariana.duarte	mariana.duarte@gmail.com	MariD2024!
+
+- João Pedro Martins	jpmartins	jp.martins@outlook.com	jpMartins#91
+
+- Ana Beatriz Nogueira	anab.nogueira	ana.nogueira@gmail.com	AnaB_N123
+
+- Ricardo Almeida	 r.almeida	ricardo.almeida@yahoo.com	Ric@lmeida2023
+
+- Sofia Costa	sofiac	sofiacosta@hotmail.com	sc*Pass2025
+
+- Bruno Gonçalves	 brunogon	bruno.goncalves@gmail.com	brunoG123!
+
+- Inês Carvalho	ines.carvalho	ines.c@gmail.com	In3sCarv@2022
+
+- Tiago Oliveira	tiagooliveira	tiago.oliveira@icloud.com	TiagOlive_89
+
+- Catarina Ribeiro	cataribeiro	catarina.ribeiro@gmail.com	CatRi#2020
+
+- Miguel Ferreira	  miguel.f	mferreira@hotmail.com	mf_Pass!321
+
+
 **Admins:**
+
 - admin/Admin123!
+  
+- Rafael Matos	rafaelmatos	rafael.matos@gmail.com	RMat@os92
